@@ -20,7 +20,9 @@ typedef enum Piece {
 
 // piece images
 // 7 pieces, 4 rotations, 4x4 colormap
-const uint8_t PieceImages[7][4][4][4];
+const uint8_t PieceColormaps[7][4][4][4];
+// the bitmaps for the individual squares
+const uint16_t SquareBitmaps[8][64];
 
 // functions
 void PieceRotate(piece_t piece, 

@@ -102,6 +102,7 @@ void Wave_SoundTick(uint8_t channels);
 void Wave_SetChannel(soundchannel_t channel, int16_t data);
 void resetBoard();
 void GameLoop();
+
 int main(void)
 { 
 	char l;
