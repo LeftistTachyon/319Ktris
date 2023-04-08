@@ -92,26 +92,10 @@ void Delay100ms(uint32_t count){uint32_t volatile time;
     count--;
   }
 }
-typedef enum {English, Spanish, Portuguese, French} Language_t;
+typedef enum {English, Spanish} Language_t;
 Language_t myLanguage=English;
-typedef enum {HELLO, GOODBYE, LANGUAGE} phrase_t;
-const char Hello_English[] ="Hello";
-const char Hello_Spanish[] ="\xADHola!";
-const char Hello_Portuguese[] = "Ol\xA0";
-const char Hello_French[] ="All\x83";
-const char Goodbye_English[]="Goodbye";
-const char Goodbye_Spanish[]="Adi\xA2s";
-const char Goodbye_Portuguese[] = "Tchau";
-const char Goodbye_French[] = "Au revoir";
 const char Language_English[]="English";
 const char Language_Spanish[]="Espa\xA4ol";
-const char Language_Portuguese[]="Portugu\x88s";
-const char Language_French[]="Fran\x87" "ais";
-const char *Phrases[3][4]={
-  {Hello_English,Hello_Spanish,Hello_Portuguese,Hello_French},
-  {Goodbye_English,Goodbye_Spanish,Goodbye_Portuguese,Goodbye_French},
-  {Language_English,Language_Spanish,Language_Portuguese,Language_French}
-};
 
 typedef enum SoundChannel {
 	Tri1, Tri2, Tri3, Tri4, Square1, Square2, Square3, Noise
@@ -119,55 +103,46 @@ typedef enum SoundChannel {
 
 void SoundTick(uint8_t channels);
 void SetChannel(soundchannel_t channel, int16_t data);
-int main(void){ char l;
+void resetBoard();
+void GameLoop();
+int main(void)
+{ 
+	char l;
   DisableInterrupts();
   TExaS_Init(SCOPE);       // Bus clock is 80 MHz 
 	
 	// DAC_Init();
-	Wave_Init();
-	SetChannel(Tri1, 50);
-	SetChannel(Square1, 33);
+	//Wave_Init();
+	//SetChannel(Tri1, 50);
+	//SetChannel(Square1, 33);
 	// SetChannel(Tri2, 11025/660);
-	SetActiveChannels(2);
+	//SetActiveChannels(2);
 	// SetChannel(Noise, 5);
 	
-	Timer2A_Start(); // start the sound
+	//Timer2A_Start(); // start the sound
 	
   Output_Init();
-	
-	uint16_t screenCol = 0x0000;
-	while(1) {
-		// hang lol
-		// SoundTick(1);
-		ST7735_FillScreen(screenCol = ~screenCol);            // set screen to black
+	resetBoard();
+}
+
+
+uint8_t grid[22][10];
+void resetBoard()
+{
+	for (int i = 0; i < 22; i++)
+	{
+		for(int k = 0; k < 10; k++)
+		{
+			grid[i][k] = 0;
+		}
 	}
+}
+
+void GameLoop()
+{
+	//Get State of Input
+	//Run Logic
+	//Draw to Screen
 	
-	#ifdef Screen_Routine
-  for(phrase_t myPhrase=HELLO; myPhrase<= GOODBYE; myPhrase++){
-    for(Language_t myL=English; myL<= French; myL++){
-         ST7735_OutString((char *)Phrases[LANGUAGE][myL]);
-      ST7735_OutChar(' ');
-         ST7735_OutString((char *)Phrases[myPhrase][myL]);
-      ST7735_OutChar(13);
-    }
-  }
-  Delay100ms(30);
-  ST7735_FillScreen(0x0000);       // set screen to black
-  l = 128;
-  while(1){
-    Delay100ms(20);
-    for(int j=0; j < 3; j++){
-      for(int i=0;i<16;i++){
-        ST7735_SetCursor(7*j+0,i);
-        ST7735_OutUDec(l);
-        ST7735_OutChar(' ');
-        ST7735_OutChar(' ');
-        ST7735_SetCursor(7*j+4,i);
-        ST7735_OutChar(l);
-        l++;
-      }
-    }
-  }  
-	#endif
 }
 
