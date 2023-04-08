@@ -33,6 +33,7 @@
 #include "../inc/wave.h"
 #include "Timer1.h"
 #include "DAC.h"
+#include "../inc/Timer4A.h"
 
 void DisableInterrupts(void); // Disable interrupts
 void EnableInterrupts(void);  // Enable interrupts
@@ -105,14 +106,24 @@ int main(void)
 { 
 	char l;
   DisableInterrupts();
-  TExaS_Init(SCOPE);       // Bus clock is 80 MHz
+  TExaS_Init(SCOPE);       // Bus clock is 80 MHz 
+	EnableInterrupts();
+	
+	// DAC_Init();
+	// Wave_Init();
+	
+	//Timer2A_Start(); // start the sound
 	
   Output_Init();
 	resetBoard();
+	
+	Timer4A_Init(&GameLoop, 2666667, 6);
+	while(1) {};
 }
 
 
 uint8_t grid[22][10];
+int8_t changeGrid[22][10];
 void resetBoard()
 {
 	for (int i = 0; i < 22; i++)
@@ -128,7 +139,19 @@ void GameLoop()
 {
 	//Get State of Input
 	//Run Logic
+	
 	//Draw to Screen
+	for (int i = 0; i < 20; i++)
+	{
+		for(int k = 0; k < 10; k++)
+		{
+			if(changeGrid[i][k] < 0)
+				ST7735_FillRect(k*8 + 48, i*8, 8, 8, 0x0000);
+			if(changeGrid[i][k] > 0)
+				break;
+				//ST7735_DrawBitmap(k*8 + 48, i*8,  , 8, 8)
+		}
+	}	
 	
 }
 
