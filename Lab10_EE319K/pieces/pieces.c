@@ -384,3 +384,17 @@ void PieceRotate(piece_t piece,
 		return;
 	}
 }
+
+uint32_t Random32(uint8_t gen);
+
+#define BagRandomizer 0
+void RandomizeBag(piece_t bag[7]) {
+	// bag = {P_L, P_J, P_T, P_Z, P_O, P_S, P_I};
+	for(uint8_t i = 0, j, temp; i < 7; i++) {
+		j = Random32(BagRandomizer) % (8 - i);
+		
+		temp = bag[i];
+		bag[i] = bag[j];
+		bag[j] = temp;
+	}
+}

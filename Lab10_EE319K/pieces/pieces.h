@@ -24,12 +24,14 @@ const uint8_t PieceColormaps[7][4][4][4];
 // the bitmaps for the individual squares
 const uint16_t SquareBitmaps[8][64];
 
-// functions
+// functions:
+// rotate a piece
 void PieceRotate(piece_t piece, 
 								 uint8_t *rot, 
 								 uint8_t drot,
 								 uint8_t *x,
 								 uint8_t *y,
 								 uint8_t matrix[22][10]);
-
+// get a random bag
+void RandomizeBag(piece_t bag[7]);
 #endif // __PIECES_H
