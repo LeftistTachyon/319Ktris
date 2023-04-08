@@ -6,11 +6,13 @@
 !.gitignore
 
 # include Lab 10 sources
-!Lab10_EE319K/*.c
-!Lab10_EE319K/*.h
-!Lab10_EE319K/*.s
+!Lab10_EE319K/**/*.c
+!Lab10_EE319K/**/*.h
+!Lab10_EE319K/**/*.s
+# except for this one thing
+Lab10_EE319K/RTE/_SpaceInvaders/RTE_Components.h
 
 # include "inc" sources
-!inc/*.c
-!inc/*.h
-!inc/*.s
+!inc/**/*.c
+!inc/**/*.h
+!inc/**/*.s
