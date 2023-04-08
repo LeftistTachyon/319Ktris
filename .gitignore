@@ -1,0 +1,16 @@
+# ignore all
+*
+!*/
+
+# include .gitignore
+!.gitignore
+
+# include Lab 10 sources
+!Lab10_EE319K/*.c
+!Lab10_EE319K/*.h
+!Lab10_EE319K/*.s
+
+# include "inc" sources
+!inc/*.c
+!inc/*.h
+!inc/*.s
