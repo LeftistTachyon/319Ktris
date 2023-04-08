@@ -292,13 +292,14 @@ void PieceRotate(piece_t piece,
 								 uint8_t matrix[22][10]) 
 {
 	// rotate
-	uint8_t newRot = (*rot + drot) & 0b11;
+	uint8_t newRot = (*rot + drot) & 0b11U;
 	
 	// check for collisions
 	if(testRotate(piece, newRot, *x, *y, matrix)) {
 		*rot = newRot;
 		return;
 	}
+	if(piece <= P_T && (*rot ^ 0b01U)) return;
 	if(testRotate(piece, newRot, *x+1, *y, matrix)) {
 		*rot = newRot;
 		++*x;
