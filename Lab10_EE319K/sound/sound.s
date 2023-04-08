@@ -1,7 +1,7 @@
 	IMPORT DAC_Out
 	IMPORT Tri
-	EXPORT SoundTick
-	EXPORT SetChannel
+	EXPORT Wave_SoundTick
+	EXPORT Wave_SetChannel
 		
 	AREA    DATA, ALIGN=2
 		
@@ -56,7 +56,7 @@ MaxMag    DCD 0x003FFFFF
 ; invoked at 11kHz
 ; R0: number of used channels (used for balancing)
 ; no out (pure function)
-SoundTick
+Wave_SoundTick
 	PUSH {R4-R10, LR}
 
 	LDR R4, =SoundChannels ; the pointer to the current channel
@@ -258,7 +258,7 @@ Noise
 	
 ; in: channel (soundchannel_t)
 ;     data (period in 11.025kHz cycles) (int16_t)
-SetChannel
+Wave_SetChannel
 	PUSH {R4, R5}
 
 	MOV R4, R0

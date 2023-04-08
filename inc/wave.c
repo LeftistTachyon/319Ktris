@@ -36,15 +36,7 @@ void Timer2A_Init(uint32_t period, uint32_t priority){
   
   TIMER2_CTL_R = 0x00000001;    // 10) enable timer2A
 }
-#ifdef yeah
-void Timer2A_ChangePeriod(uint32_t period) {
-  TIMER2_CTL_R = 0x00000000;    // 1) disable timer2A during setup
-  TIMER2_TAILR_R = period-1;    // 4) reload value
-  TIMER2_ICR_R = 0x00000001;    // 6) clear timer2A timeout flag
-  TIMER2_CTL_R = 0x00000001;    // 10) enable timer2A
-}
-#endif
-void Timer2A_Start(void){
+void Wave_Start(void){
   NVIC_EN0_R = 1<<23;           // 9) enable IRQ 23 in NVIC
 }
 void Wave_Stop(void){
@@ -59,15 +51,15 @@ void Wave_Init(void){
 }
 
 static uint8_t ACTIVE_CHANNELS;
-void SetActiveChannels(uint8_t channels) {
+void Wave_SetActiveChannels(uint8_t channels) {
 	ACTIVE_CHANNELS = channels;
 }
 
-void SoundTick(uint8_t channels);
+void Wave_SoundTick(uint8_t channels);
 void Timer2A_Handler(void){
   TIMER2_ICR_R = TIMER_ICR_TATOCINT;// acknowledge TIMER2A timeout
 	// output one value to DAC if a sound is active
-	SoundTick(ACTIVE_CHANNELS);
+	Wave_SoundTick(ACTIVE_CHANNELS);
 }
 
 #define MAX_MAG 0x003FFFFF

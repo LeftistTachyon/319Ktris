@@ -1,5 +1,7 @@
 #ifndef __PIECES_H
 
+#include <stdint.h>
+
 // color definitions
 #define BLANK  0x00
 #define RED    0x01
@@ -10,5 +12,22 @@
 #define CYAN   0x06
 #define PURPLE 0x07
 #define GREY   0x08
+
+// piece definitions
+typedef enum Piece {
+	P_L, P_J, P_T, P_Z, P_O, P_S, P_I
+} piece_t;
+
+// piece images
+// 7 pieces, 4 rotations, 4x4 colormap
+const uint8_t PieceImages[7][4][4][4];
+
+// functions
+void PieceRotate(piece_t piece, 
+								 uint8_t *rot, 
+								 uint8_t drot,
+								 uint8_t *x,
+								 uint8_t *y,
+								 uint8_t matrix[22][10]);
 
 #endif // __PIECES_H

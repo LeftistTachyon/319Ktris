@@ -12,9 +12,16 @@
 // initialize Wave functionality
 void Wave_Init(void);
 
-void Timer2A_Start();
+// start and stop
+void Wave_Start();
+void Wave_Stop();
 
-void SetActiveChannels(uint8_t channels);
+// set active channels
+void Wave_SetActiveChannels(uint8_t channels);
+
+typedef enum SoundChannel {
+	Tri1, Tri2, Tri3, Tri4, Square1, Square2, Square3, Noise
+} soundchannel_t;
 
 #ifdef DEFAULT_SOUND
 // 6-bit sounds, 11.025kHz sampling

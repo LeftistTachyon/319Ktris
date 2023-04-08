@@ -97,29 +97,15 @@ Language_t myLanguage=English;
 const char Language_English[]="English";
 const char Language_Spanish[]="Espa\xA4ol";
 
-typedef enum SoundChannel {
-	Tri1, Tri2, Tri3, Tri4, Square1, Square2, Square3, Noise
-} soundchannel_t;
-
-void SoundTick(uint8_t channels);
-void SetChannel(soundchannel_t channel, int16_t data);
+void Wave_SoundTick(uint8_t channels);
+void Wave_SetChannel(soundchannel_t channel, int16_t data);
 void resetBoard();
 void GameLoop();
 int main(void)
 { 
 	char l;
   DisableInterrupts();
-  TExaS_Init(SCOPE);       // Bus clock is 80 MHz 
-	
-	// DAC_Init();
-	//Wave_Init();
-	//SetChannel(Tri1, 50);
-	//SetChannel(Square1, 33);
-	// SetChannel(Tri2, 11025/660);
-	//SetActiveChannels(2);
-	// SetChannel(Noise, 5);
-	
-	//Timer2A_Start(); // start the sound
+  TExaS_Init(SCOPE);       // Bus clock is 80 MHz
 	
   Output_Init();
 	resetBoard();
