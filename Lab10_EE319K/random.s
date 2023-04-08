@@ -6,14 +6,15 @@
 ; How to use: 
 ; 1) call Random_Init once with a seed
 ;     Random_Init(1);
-;     Random_Init(NVIC_CURRENT_R);
+;     Random_Init(NVIC_CURRENT_R, 0);
 ; 2) call Random over and over to get a new random number
-;   n = Random();    // 8 bit number
-;   m = (Random32()>>16)%60; // a number from 0 to 59
+;   n = Random(0);    // 8 bit number
+;   m = (Random32(1)>>16)%60; // a number from 0 to 59
 
        THUMB
        AREA    DATA, ALIGN=2
-M      SPACE   4
+M1     SPACE   4
+M2	   SPACE   4
        ALIGN          
        AREA    |.text|, CODE, READONLY, ALIGN=2
        EXPORT  Random_Init
@@ -21,14 +22,20 @@ M      SPACE   4
        EXPORT  Random32
 ;R0 is initial seed
 Random_Init
-       LDR R2,=M       ; R2 points to M
+	   LDR R2, =M1
        STR R0,[R2]     ; M=seen
+	   LDR R2, =M2
+	   STR R0,[R2]
        BX  LR
 ;------------Random32------------
+; Input R0: which rgen to use: 0 or 1
 ; Return R0= random number
 ; Linear congruential generator 
 ; from Numerical Recipes by Press et al.
-Random32 LDR R2,=M    ; R2 = &M, R4 points to M
+Random32
+       TST R1, #1
+       LDRNE R2,=M1       
+	   LDREQ R2,=M2    ; R2 = &M
        LDR R0,[R2]  ; R0=M
        LDR R1,=1664525
        MUL R0,R0,R1 ; R0 = 1664525*M
@@ -38,10 +45,14 @@ Random32 LDR R2,=M    ; R2 = &M, R4 points to M
        BX  LR
 
 ;------------Random------------
+; Input R0: which rgen to use: 0 or 1
 ; Return R0= random number, 0 to 255
 ; Linear congruential generator 
 ; from Numerical Recipes by Press et al.
-Random LDR R2,=M     ; R2 = &M, R4 points to M
+Random
+       TST R1, #1
+       LDRNE R2,=M1       
+	   LDREQ R2,=M2    ; R2 = &M
        LDR R0,[R2]   ; R0=M
        LDR R1,=1664525
        MUL R0,R0,R1  ; R0 = 1664525*M
