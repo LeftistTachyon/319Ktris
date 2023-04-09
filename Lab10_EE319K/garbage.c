@@ -4,7 +4,7 @@ static uint8_t deque[32];
 static uint8_t start, end;
 
 // adds garbage to the queue
-bool offerGarbage(uint8_t lines) {
+bool OfferGarbage(uint8_t lines) {
 	if(((start + 1) & 0x1F) == end) return false;
 	
 	deque[start] = lines;
@@ -13,7 +13,7 @@ bool offerGarbage(uint8_t lines) {
 }
 
 // takes the next item from the garbage queue
-uint8_t pollGarbage() {
+uint8_t PollGarbage() {
 	if(start == end) return 0;
 	
 	uint8_t output = deque[end];
@@ -22,7 +22,7 @@ uint8_t pollGarbage() {
 }
 
 // counters the garbage currently in the queue
-uint8_t counterGarbage(uint8_t lines) {
+uint8_t CounterGarbage(uint8_t lines) {
 	uint8_t countered;
 	while(lines > 0 && start != end) {
 		countered = deque[start] - lines;
@@ -40,18 +40,18 @@ uint8_t counterGarbage(uint8_t lines) {
 }
 
 // is there anything in the queue?
-bool hasGarbage() {
+bool HasGarbage() {
 	return start != end;
 }
 
 // clears all garbage from the queue
-void initGarbage() {
+void InitGarbage() {
 	start = end = 0;
 }
 
 uint32_t Random32(uint8_t gen);
 // gets the well for the next section of garbage
 #define GarbageRandomizer 1
-uint8_t getGarbageWell() {
+uint8_t GetGarbageWell() {
 	return Random32(GarbageRandomizer) % 10;
 }
