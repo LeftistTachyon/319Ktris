@@ -1,4 +1,5 @@
 #ifndef __PIECES_H
+#define __PIECES_H
 
 #include <stdint.h>
 
@@ -20,9 +21,9 @@ typedef enum Piece {
 
 // piece images
 // 7 pieces, 4 rotations, 4x4 colormap
-const uint8_t PieceColormaps[7][4][4][4];
+extern const uint8_t PieceColormaps[7][4][4][4];
 // the bitmaps for the individual squares
-const uint16_t SquareBitmaps[8][64];
+extern const uint16_t SquareBitmaps[8][64];
 
 // functions:
 // rotate a piece

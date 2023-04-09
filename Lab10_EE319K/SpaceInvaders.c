@@ -34,6 +34,7 @@
 #include "Timer1.h"
 #include "DAC.h"
 #include "../inc/Timer4A.h"
+#include "pieces.h"
 
 void DisableInterrupts(void); // Disable interrupts
 void EnableInterrupts(void);  // Enable interrupts
@@ -119,7 +120,28 @@ int main(void)
 	resetBoard();
 	
 	Timer4A_Init(&GameLoop, 2666667, 6);
-	while(1) {};
+	
+	PQ_Init();
+	
+	while(1) {
+		ST7735_FillScreen(0);
+		
+		ST7735_OutUDec(PQ_PollPiece());
+		ST7735_OutChar(' ');
+		ST7735_OutUDec(PQ_Preview(0));
+		ST7735_OutUDec(PQ_Preview(1));
+		ST7735_OutUDec(PQ_Preview(2));
+		ST7735_OutUDec(PQ_Preview(3));
+		ST7735_OutUDec(PQ_Preview(4));
+		ST7735_OutUDec(PQ_Preview(5));
+		ST7735_OutUDec(PQ_Preview(6));
+		ST7735_OutUDec(PQ_Preview(7));
+		ST7735_OutUDec(PQ_Preview(8));
+		ST7735_OutUDec(PQ_Preview(9));
+		
+		// ST7735_OutChar(' ');
+		ST7735_SetCursor(0, 0);
+	}
 }
 
 
