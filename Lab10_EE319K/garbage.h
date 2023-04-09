@@ -19,4 +19,7 @@ bool hasGarbage();
 // (re)initializes the garbage queue
 void initGarbage();
 
+// gets the well for the next section of garbage
+uint8_t getGarbageWell();
+
 #endif // __GARBAGE_H

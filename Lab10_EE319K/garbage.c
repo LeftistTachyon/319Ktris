@@ -48,3 +48,10 @@ bool hasGarbage() {
 void initGarbage() {
 	start = end = 0;
 }
+
+uint32_t Random32(uint8_t gen);
+// gets the well for the next section of garbage
+#define GarbageRandomizer 1
+uint8_t getGarbageWell() {
+	return Random32(GarbageRandomizer) % 10;
+}
