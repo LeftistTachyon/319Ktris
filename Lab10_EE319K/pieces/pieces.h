@@ -32,6 +32,14 @@ void PieceRotate(piece_t piece,
 								 uint8_t *x,
 								 uint8_t *y,
 								 uint8_t matrix[22][10]);
-// get a random bag
-void RandomizeBag(piece_t bag[7]);
+
+// piece queue functionality
+// number of piece previews
+#define PIECE_PREVIEWS 3
+// init piece queue
+void PQ_Init();
+// get a piece
+piece_t PQ_PollPiece();
+// get a piece preview
+piece_t PQ_Preview(uint8_t index);
 #endif // __PIECES_H

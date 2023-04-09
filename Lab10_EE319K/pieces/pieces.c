@@ -385,10 +385,12 @@ void PieceRotate(piece_t piece,
 	}
 }
 
+#define BagRandomizer 0
 uint32_t Random32(uint8_t gen);
 
-#define BagRandomizer 0
-void RandomizeBag(piece_t bag[7]) {
+static piece_t bag[] = {P_L, P_J, P_T, P_Z, P_O, P_S, P_I};
+
+void RandomizeBag() {
 	// bag = {P_L, P_J, P_T, P_Z, P_O, P_S, P_I};
 	for(uint8_t i = 0, j, temp; i < 7; i++) {
 		j = Random32(BagRandomizer) % (8 - i);
@@ -397,4 +399,35 @@ void RandomizeBag(piece_t bag[7]) {
 		bag[i] = bag[j];
 		bag[j] = temp;
 	}
+}
+
+
+// PIECE QUEUE
+static piece_t queue[16];
+static uint8_t start, end;
+
+static void AddRandBag() {
+	RandomizeBag();
+	for(uint8_t i = 0; i < 7; ++i) {
+		queue[end] = bag[i];
+		end = (end + 1) & 0xF;
+	}
+}
+
+// init piece queue
+void PQ_Init() {
+	start = end = 0;
+	AddRandBag();
+}
+// get a piece
+piece_t PQ_PollPiece() {
+	piece_t output = queue[start];
+	start = (start + 1) & 0xF;
+	if(((start + PIECE_PREVIEWS) & 0xF) > end) AddRandBag();
+	
+	return output;
+}
+// get a piece preview
+piece_t PQ_Preview(uint8_t index) {
+	return queue[(start + index) & 0xF];
 }
