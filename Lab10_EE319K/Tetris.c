@@ -32,7 +32,7 @@
 #include "Timer1.h"
 #include "DAC.h"
 #include "../inc/Timer4A.h"
-#include "SpaceInvaders.h"
+#include "Tetris.h"
 
 
 int main(void)
