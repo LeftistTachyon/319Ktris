@@ -66,7 +66,7 @@ void GameLoop()
 		solidify();
 		if(clearLines() > 0)
 		{
-			//redrawBoard
+			redrawBoard();
 		}
 		spawnPiece(P_S, 0);
 	}
@@ -124,6 +124,21 @@ void resetBoard()
 			newGrid[i][k] = 0;
 		}
 	}
+}
+
+void redrawBoard()
+{
+	ST7735_FillScreen(0);
+	for (int i = 0; i < 22; i++)
+		{
+			for(int k = 0; k < 10; k++)
+			{
+				if (i > 1)
+				{
+					ST7735_DrawBitmap(k*8 + 48, (i*8)-16, &SquareBitmaps[grid[i][k]][0],8,8);
+				}
+			}
+		}
 }
 
 void spawnPiece(piece_t piece, uint8_t offset)

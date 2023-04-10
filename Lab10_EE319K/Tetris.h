@@ -23,6 +23,7 @@ void Wave_SetChannel(soundchannel_t channel, int16_t data);
 
 
 void resetBoard(); //Clears Grid Array
+void redrawBoard(); //Redraws Board after Line Clear Event or Garbage
 void spawnPiece(piece_t piece, uint8_t offset); 
 void shift(uint8_t rotation, uint8_t deltaX, uint8_t deltaY); //Shifts Active Piece (Check First)
 uint8_t canMove(uint8_t rotation, uint8_t deltaX, uint8_t deltaY); //Detects if the Active Piece can make the move specified
