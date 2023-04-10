@@ -64,6 +64,10 @@ void GameLoop()
 	if(failCount > 4)
 	{
 		solidify();
+		if(clearLines() > 0)
+		{
+			//redrawBoard
+		}
 		spawnPiece(P_S, 0);
 	}
 	
@@ -199,6 +203,29 @@ uint8_t canMove(uint8_t rotation, uint8_t deltaX, uint8_t deltaY)
 		}
 	}
 	return 1;
+}
+
+//Check for Full Lines, Clear them if full (returns num of Lines Cleared)
+uint8_t clearLines()
+{
+	uint8_t numOfLines = 0;
+	for (int i = 21; i > 0; i--)
+	{
+		int holeFlag = 0;
+		for(int k = 0; k < 10; k++)
+		{
+			if(i < 21)
+			{
+				grid[i+1][k] = grid[i+1-numOfLines][k];
+			}
+			if(grid[i][k] == 0)
+				holeFlag = 1;
+		}
+		if(holeFlag == 0)
+			numOfLines++;
+		holeFlag = 0;
+	}
+	return numOfLines;
 }
 
 void Timer1A_Handler(void){ // can be used to perform tasks in background

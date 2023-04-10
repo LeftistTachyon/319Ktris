@@ -26,5 +26,6 @@ void resetBoard(); //Clears Grid Array
 void spawnPiece(piece_t piece, uint8_t offset); 
 void shift(uint8_t rotation, uint8_t deltaX, uint8_t deltaY); //Shifts Active Piece (Check First)
 uint8_t canMove(uint8_t rotation, uint8_t deltaX, uint8_t deltaY); //Detects if the Active Piece can make the move specified
+uint8_t clearLines(); //Check for Full Lines, Clear them if full (returns num of Lines Cleared)
 void GameLoop(); //Main Update Method
 void solidify(); //Adds Active Piece to Main Grid
