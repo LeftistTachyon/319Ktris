@@ -1,13 +1,3 @@
-// SpaceInvaders.c
-// Runs on TM4C123
-// Jonathan Valvano and Daniel Valvano
-// This is a starter project for the ECE319K Lab 10
-
-// Last Modified: 1/2/2023 
-// http://www.spaceinvaders.de/
-// sounds at http://www.classicgaming.cc/classics/spaceinvaders/sounds.php
-// http://www.classicgaming.cc/classics/spaceinvaders/playguide.php
-
 // ******* Possible Hardware I/O connections*******************
 // Slide pot pin 1 connected to ground
 // Slide pot pin 2 connected to PD2/AIN5
@@ -62,41 +52,37 @@ int main(void)
 
 uint32_t frameCount = 0;
 uint8_t changeOccured = 0;
+uint8_t failCount = 0;
 void GameLoop()
 {
-	
 	//Get State of Input
-	//Run Logic
 	
-	//Solidify Check
+	
+	//Check Overall Game State (Loss Condition)
+	
+	//Solidify Check (No Moves Made after Given Grace Period)
+	if(failCount > 4)
+	{
+		solidify();
+		spawnPiece(P_S, 0);
+	}
+	
 	//Gravity
+	if(frameCount > 15)
+	{
+		if(canMove(currentRot, 0, 1) == 1)
+		{
+			shift(currentRot, 0, 1);
+		}
+		else
+		{
+			failCount++;
+		}
+	  frameCount = 0;
+	}
+	
 	//Shifts
 	//Rotate
-	
-	if(frameCount > 30)
-	{
-		shift(currentRot, 0, 1);
-		changeOccured = 1;
-		frameCount = 0;
-	}
-	
-	if(frameCount == 10)
-	{
-		shift(currentRot, 1, 0);
-		changeOccured = 1;
-	}
-	
-	if(frameCount == 20)
-	{
-		shift(currentRot, -1, 0);
-		changeOccured = 1;
-	}
-	if(frameCount == 15)
-	{
-		currentRot = (currentRot + 1) % 4;
-		shift(currentRot, 0, 0);
-		changeOccured = 1;
-	}
 	
 	if(changeOccured == 1)
 	{
@@ -162,6 +148,7 @@ void shift(uint8_t rotation, uint8_t deltaX, uint8_t deltaY)
 			newGrid[i+pieceY][k+pieceX] = PieceColormaps[currentPiece][rotation][i][k];
 		}
 	}
+	changeOccured = 1;
 }
 
 //Adds Preivous State of Active Piece to Screen
@@ -174,6 +161,44 @@ void solidify()
 			grid[i][k] = lastGrid[i][k];
 		}
 	}
+	
+	//Clear Last Grid as Active Piece is no longer the Active Piece
+	for (int i = 0; i < 22; i++)
+	{
+		for(int k = 0; k < 10; k++)
+		{
+			lastGrid[i][k] = 0;
+		}
+	}
+	changeOccured = 1;
+}
+
+//Tests Shift (Returns 0 on fail, 1 on Success)
+//Implement Kick Table
+uint8_t canMove(uint8_t rotation, uint8_t deltaX, uint8_t deltaY)
+{
+	uint8_t tempY = pieceY + deltaY;
+	uint8_t tempX = pieceX + deltaX;
+	
+	if(tempY > 21 || tempY < 0)
+		return 0;
+	if(tempX > 9 || tempX < 0)
+		return 0;
+	
+	for (int i = 0; i < 4 ; i++)
+	{
+		for (int k = 0; k < 4; k++)
+		{
+			if(PieceColormaps[currentPiece][rotation][i][k] != 0)
+			{
+				if(grid[i+tempY][k+tempX] != 0)
+				{
+					return 0;
+				}
+			}
+		}
+	}
+	return 1;
 }
 
 void Timer1A_Handler(void){ // can be used to perform tasks in background
