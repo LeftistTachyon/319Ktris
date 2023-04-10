@@ -16,7 +16,7 @@
 
 // piece definitions
 typedef enum Piece {
-	P_L, P_J, P_T, P_Z, P_O, P_S, P_I
+	P_L, P_J, P_T, P_Z, P_O, P_S, P_I, P_NONE
 } piece_t;
 
 // piece images
@@ -24,15 +24,6 @@ typedef enum Piece {
 extern const uint8_t PieceColormaps[7][4][4][4];
 // the bitmaps for the individual squares
 extern const uint16_t SquareBitmaps[9][64];
-
-// functions:
-// rotate a piece
-void PieceRotate(piece_t piece, 
-								 uint8_t *rot, 
-								 uint8_t drot,
-								 uint8_t *x,
-								 uint8_t *y,
-								 uint8_t matrix[22][10]);
 
 // piece queue functionality
 // number of piece previews

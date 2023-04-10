@@ -339,58 +339,6 @@ const uint16_t SquareBitmaps[9][64] = {
 };
 
 #endif
-static uint8_t testRotate(piece_t piece, 
-								 uint8_t rot,
-								 uint8_t x, uint8_t y,
-								 uint8_t matrix[22][10]) 
-{
-	for(uint8_t row = 0, col, absX, absY; row < 4; ++row) {
-		for(col = 0; col < 4; ++col) {
-			if(PieceColormaps[piece][rot][row][col]) {
-				if((absX = x + col) < 0 || 
-						absX >= 10 ||
-						(absY = y + row) >= 22 || 
-						// absY < 0 ||
-						matrix[absY][absX])
-					return 0;
-			}
-		}
-	}
-	
-	return 1;
-}
-
-void PieceRotate(piece_t piece, 
-								 uint8_t *rot, uint8_t drot,
-								 uint8_t *x, uint8_t *y,
-								 uint8_t matrix[22][10]) 
-{
-	// rotate
-	uint8_t newRot = (*rot + drot) & 0b11U;
-	
-	// check for collisions
-	if(testRotate(piece, newRot, *x, *y, matrix)) {
-		*rot = newRot;
-		return;
-	}
-	
-	// special case: LJT no kicks when horizontal
-	if(piece <= P_T && (*rot ^ 0b01U)) return;
-	
-	// try one to the right
-	if(testRotate(piece, newRot, *x+1, *y, matrix)) {
-		*rot = newRot;
-		++*x;
-		return;
-	}
-	
-	// try one to the left
-	if(testRotate(piece, newRot, *x-1, *y, matrix)) {
-		*rot = newRot;
-		--*x;
-		return;
-	}
-}
 
 #define BagRandomizer 0
 uint32_t Random32(uint8_t gen);

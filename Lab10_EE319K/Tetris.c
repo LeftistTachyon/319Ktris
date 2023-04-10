@@ -51,12 +51,13 @@ int main(void)
 	ST7735_FillScreen(0);
 	
 	spawnPiece(P_S,0);
-	Timer4A_Init(&GameLoop, 2666667, 6);
+	// Timer4A_Init(&GameLoop, 2666667, 6);
 	
 	PQ_Init();
 		
 	while(1) 
 	{
+		GameLoop();
 	}
 }
 
