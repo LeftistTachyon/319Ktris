@@ -36,7 +36,6 @@
 #include "Tetris.h"
 #include "grid.h"
 
-
 int main(void)
 { 
   DisableInterrupts();
@@ -49,21 +48,17 @@ int main(void)
 	//Timer2A_Start(); // start the sound
 	
   Output_Init();
-	resetBoard();
 	// ST7735_FillScreen(ST7735_BLACK);
 	ST7735_FillRect(0, 0, 48, 160, ST7735_WHITE);
 	ST7735_FillRect(48, 0, 80, 160, ST7735_BLACK);
 	
-	// spawnPiece(P_S,0);
-	// Timer4A_Init(&GameLoop, 2666667, 6);
+	Timer4A_Init(&GameLoop, 2666667, 6);
 	
 	// PQ_Init();
 	Grid_Init();
 	Grid_NewPiece();
 		
-	while(1) 
-	{
-		GameLoop();
+	while(1) {
 	}
 }
 
@@ -75,7 +70,6 @@ void GameLoop()
 	//Get State of Input
 	//Run Logic
 	
-	//Solidify Check
 	//Shifts
 	//Rotate
 	
@@ -113,59 +107,6 @@ void GameLoop()
 	}
 
 	++frameCount;
-}
-
-void resetBoard()
-{
-	for (int i = 0; i < 22; i++)
-	{
-		for(int k = 0; k < 10; k++)
-		{
-			grid[i][k] = 0;
-			lastGrid[i][k] = 0;
-			newGrid[i][k] = 0;
-		}
-	}
-}
-
-void spawnPiece(piece_t piece, uint8_t offset)
-{
-	for (int i = 0; i < 4 ; i++)
-	{
-		for (int k = 0; k < 4; k++)
-		{
-			newGrid[i+offset][k+3] = PieceColormaps[piece][0][i][k];
-		}
-	}
-	currentPiece = piece;
-	pieceX = 3;
-	pieceY = offset;
-	currentRot = 0;
-}
-
-void shift(uint8_t rotation, uint8_t deltaX, uint8_t deltaY)
-{
-	pieceY += deltaY;
-	pieceX += deltaX;
-	for (int i = 0; i < 4 ; i++)
-	{
-		for (int k = 0; k < 4; k++)
-		{
-			newGrid[i+pieceY][k+pieceX] = PieceColormaps[currentPiece][rotation][i][k];
-		}
-	}
-}
-
-//Adds Preivous State of Active Piece to Screen
-void solidify()
-{
-	for (int i = 0; i < 22; i++)
-	{
-		for(int k = 0; k < 10; k++)
-		{
-			grid[i][k] = lastGrid[i][k];
-		}
-	}
 }
 
 void Timer1A_Handler(void){ // can be used to perform tasks in background
