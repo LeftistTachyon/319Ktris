@@ -9,9 +9,9 @@ piece_t currPiece = P_NONE;
 piece_t heldPiece = P_NONE;
 uint8_t pX, pY, pRot;
 
-static uint8_t testOrientation(piece_t piece, 
-								 uint8_t rot,
-								 uint8_t x, uint8_t y) 
+uint8_t testOrientation(piece_t piece, 
+												uint8_t rot,
+												uint8_t x, uint8_t y) 
 {
 	for(uint8_t row = 0, col, absX, absY; row < 4; ++row) {
 		for(col = 0; col < 4; ++col) {

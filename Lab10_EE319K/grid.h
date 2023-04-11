@@ -12,6 +12,10 @@ extern piece_t currPiece;
 extern piece_t heldPiece;
 extern uint8_t pX, pY, pRot;
 
+uint8_t testOrientation(piece_t piece, 
+												uint8_t rot,
+												uint8_t x, uint8_t y);
+
 // (re)initializes the grid
 void Grid_Init();
 // pulls a new piece from the piece queue
