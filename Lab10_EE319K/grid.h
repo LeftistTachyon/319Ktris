@@ -28,7 +28,9 @@ void Grid_RotatePiece(bool cwise);
 // moves the piece sideways once (true for right, false for left)
 void Grid_TranslatePiece(bool right);
 // drops the piece down once
-void Grid_DropPiece();
+void Grid_SoftDrop();
+// hard drops the piece
+void Grid_HardDrop();
 // locks the piece in place
 void Grid_LockPiece();
 // holds the current piece

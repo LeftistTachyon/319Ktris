@@ -206,12 +206,23 @@ void Grid_TranslatePiece(bool right) {
 }
 
 // drops the piece down once
-void Grid_DropPiece() {
+void Grid_SoftDrop() {
 	if(testOrientation(currPiece, pRot, pX, pY + 1)) {
 		SubActivePiece();
 		++pY;
 		AddActivePiece();
 	}
+}
+
+// hard drops the piece
+void Grid_HardDrop() {
+	SubActivePiece();
+	while(testOrientation(currPiece, pRot, pX, pY + 1)) {
+		++pY;
+	}
+	AddActivePiece();
+	
+	Grid_LockPiece();
 }
 
 // locks the piece in place

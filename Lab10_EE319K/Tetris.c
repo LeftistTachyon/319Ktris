@@ -62,42 +62,15 @@ int main(void)
 	}
 }
 
-uint32_t frameCount = 0;
+#define GRAVITY_RESET 29
+uint8_t gravityCount = GRAVITY_RESET;
 bool changeOccured = false;
 
 void GameLoop()
 {	
-	//Get State of Input
-	//Run Logic
+	// Get State of Input
 	
-	//Shifts
-	//Rotate
-	
-	//Gravity
-	if(frameCount > 30)
-	{
-		Grid_DropPiece();
-		changeOccured = 1;
-		frameCount = 0;
-	}
-	
-	if(frameCount == 10)
-	{
-		Grid_TranslatePiece(true);
-		changeOccured = 1;
-	}
-	
-	if(frameCount == 20)
-	{
-		Grid_TranslatePiece(false);
-		changeOccured = 1;
-	}
-	if(frameCount == 15)
-	{
-		Grid_RotatePiece(true);
-		changeOccured = 1;
-	}
-	
+	// Draw
 	if(changeOccured)
 	{
 		//Draw to Screen
@@ -105,8 +78,6 @@ void GameLoop()
 		
 		changeOccured = false;
 	}
-
-	++frameCount;
 }
 
 void Timer1A_Handler(void){ // can be used to perform tasks in background
