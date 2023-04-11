@@ -69,6 +69,7 @@ void GameLoop()
 			redrawBoard();
 		}
 		spawnPiece(P_S, 0);
+		failCount = 0;
 	}
 	
 	//Gravity
@@ -98,9 +99,9 @@ void GameLoop()
 				if (i > 1)
 				{
 					if(lastGrid[i][k] - newGrid[i][k] > 0)
-						ST7735_DrawBitmap(k*8 + 48, (i*8)-16, &SquareBitmaps[0][0], 8, 8);
+						ST7735_DrawBitmap(k*8 + 48, (i*8)-8, &SquareBitmaps[0][0], 8, 8);
 					if(lastGrid[i][k] - newGrid[i][k] < 0)
-						ST7735_DrawBitmap(k*8 + 48, (i*8)-16, &SquareBitmaps[currentPiece+1][0], 8, 8);
+						ST7735_DrawBitmap(k*8 + 48, (i*8)-8, &SquareBitmaps[currentPiece+1][0], 8, 8);
 				}
 				
 				lastGrid[i][k] = newGrid[i][k];
@@ -135,7 +136,7 @@ void redrawBoard()
 			{
 				if (i > 1)
 				{
-					ST7735_DrawBitmap(k*8 + 48, (i*8)-16, &SquareBitmaps[grid[i][k]][0],8,8);
+					ST7735_DrawBitmap(k*8 + 48, (i*8)-8, &SquareBitmaps[grid[i][k]][0],8,8);
 				}
 			}
 		}
@@ -199,21 +200,18 @@ uint8_t canMove(uint8_t rotation, uint8_t deltaX, uint8_t deltaY)
 	uint8_t tempY = pieceY + deltaY;
 	uint8_t tempX = pieceX + deltaX;
 	
-	if(tempY > 21 || tempY < 0)
-		return 0;
-	if(tempX > 9 || tempX < 0)
-		return 0;
-	
 	for (int i = 0; i < 4 ; i++)
 	{
 		for (int k = 0; k < 4; k++)
 		{
 			if(PieceColormaps[currentPiece][rotation][i][k] != 0)
 			{
-				if(grid[i+tempY][k+tempX] != 0)
-				{
+				if(i+tempY > 21 || i+tempY < 0)
 					return 0;
-				}
+				else if(k+tempX > 9 || k+tempX < 0)
+					return 0;
+				else if(grid[i+tempY][k+tempX] != 0)
+					return 0;
 			}
 		}
 	}
@@ -224,7 +222,7 @@ uint8_t canMove(uint8_t rotation, uint8_t deltaX, uint8_t deltaY)
 uint8_t clearLines()
 {
 	uint8_t numOfLines = 0;
-	for (int i = 21; i > 0; i--)
+	for (int i = 21; i >= -1; i--)
 	{
 		int holeFlag = 0;
 		for(int k = 0; k < 10; k++)
@@ -233,8 +231,11 @@ uint8_t clearLines()
 			{
 				grid[i+1][k] = grid[i+1-numOfLines][k];
 			}
-			if(grid[i][k] == 0)
-				holeFlag = 1;
+			if(i > -1)
+			{
+				if(grid[i][k] == 0)
+					holeFlag = 1;
+			}
 		}
 		if(holeFlag == 0)
 			numOfLines++;
