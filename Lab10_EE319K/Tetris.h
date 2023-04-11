@@ -22,7 +22,8 @@ void Wave_SoundTick(uint8_t channels);
 void Wave_SetChannel(soundchannel_t channel, int16_t data);
 
 
-void resetBoard(); //Clears Grid Array
-void spawnPiece(piece_t piece, uint8_t offset);
-void shift(uint8_t rotation, uint8_t deltaX, uint8_t deltaY);
+//Input Variables
+int8_t sliderInput;
+
+//Game Functions
 void GameLoop(); //Main Update Method

@@ -7,7 +7,7 @@ uint8_t matrix[22][10];
 static int8_t changes[22][10];
 piece_t currPiece = P_NONE;
 piece_t heldPiece = P_NONE;
-uint8_t pX, pY, pRot;
+int8_t pX, pY, pRot;
 
 static uint8_t testOrientation(piece_t piece, 
 								 uint8_t rot,
@@ -100,7 +100,8 @@ static void Grid_ClearChanges() {
 // pulls a new piece from the piece queue
 void Grid_NewPiece() {
 	currPiece = PQ_PollPiece();
-	pX = 3;
+	// pX = 3;
+	pX = 0;
 	pY = 1;
 	pRot = 0; // TODO: IRS
 	

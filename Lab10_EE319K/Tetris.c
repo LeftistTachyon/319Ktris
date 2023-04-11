@@ -43,6 +43,7 @@ int main(void)
 	EnableInterrupts();
 	
 	// DAC_Init();
+	ADC_Init();
 	// Wave_Init();
 	
 	//Timer2A_Start(); // start the sound
@@ -57,6 +58,8 @@ int main(void)
 	// PQ_Init();
 	Grid_Init();
 	Grid_NewPiece();
+	
+	Grid_RotatePiece(true);
 		
 	while(1) {
 	}
@@ -68,6 +71,8 @@ bool changeOccured = false;
 void GameLoop()
 {	
 	//Get State of Input
+	sliderInput = slideInput();
+	
 	//Run Logic
 	
 	//Shifts
@@ -81,20 +86,15 @@ void GameLoop()
 		frameCount = 0;
 	}
 	
-	if(frameCount == 10)
+	if(sliderInput > 0)
 	{
 		Grid_TranslatePiece(true);
 		changeOccured = 1;
 	}
 	
-	if(frameCount == 20)
+	if(sliderInput < 0)
 	{
 		Grid_TranslatePiece(false);
-		changeOccured = 1;
-	}
-	if(frameCount == 15)
-	{
-		Grid_RotatePiece(true);
 		changeOccured = 1;
 	}
 	

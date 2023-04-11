@@ -10,7 +10,7 @@ extern uint8_t matrix[22][10];
 // the changes in the visible grid
 extern piece_t currPiece;
 extern piece_t heldPiece;
-extern uint8_t pX, pY, pRot;
+extern int8_t pX, pY, pRot;
 
 // (re)initializes the grid
 void Grid_Init();
