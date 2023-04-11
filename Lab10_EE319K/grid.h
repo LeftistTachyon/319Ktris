@@ -6,12 +6,11 @@
 #include "pieces.h"
 
 // the actual visible grid (solidified minos only)
-uint8_t matrix[22][10];
+extern uint8_t matrix[22][10];
 // the changes in the visible grid
-static int8_t changes[22][10];
-piece_t currPiece = P_NONE;
-piece_t heldPiece = P_NONE;
-uint8_t pX, pY, pRot;
+extern piece_t currPiece;
+extern piece_t heldPiece;
+extern uint8_t pX, pY, pRot;
 
 // (re)initializes the grid
 void Grid_Init();

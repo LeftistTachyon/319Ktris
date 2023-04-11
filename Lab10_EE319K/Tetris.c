@@ -22,6 +22,7 @@
 // LED on PD1
 // LED on PD0
 
+#include <stdbool.h>
 
 #include "../inc/tm4c123gh6pm.h"
 #include "../inc/ST7735.h"
@@ -33,6 +34,7 @@
 #include "DAC.h"
 #include "../inc/Timer4A.h"
 #include "Tetris.h"
+#include "grid.h"
 
 
 int main(void)
@@ -50,10 +52,12 @@ int main(void)
 	resetBoard();
 	ST7735_FillScreen(0);
 	
-	spawnPiece(P_S,0);
+	// spawnPiece(P_S,0);
 	// Timer4A_Init(&GameLoop, 2666667, 6);
 	
-	PQ_Init();
+	// PQ_Init();
+	Grid_Init();
+	Grid_NewPiece();
 		
 	while(1) 
 	{
@@ -62,66 +66,51 @@ int main(void)
 }
 
 uint32_t frameCount = 0;
-uint8_t changeOccured = 0;
+bool changeOccured = false;
+
 void GameLoop()
-{
-	
+{	
 	//Get State of Input
 	//Run Logic
 	
 	//Solidify Check
-	//Gravity
 	//Shifts
 	//Rotate
 	
+	//Gravity
 	if(frameCount > 30)
 	{
-		shift(currentRot, 0, 1);
+		Grid_DropPiece();
 		changeOccured = 1;
 		frameCount = 0;
 	}
 	
 	if(frameCount == 10)
 	{
-		shift(currentRot, 1, 0);
+		Grid_TranslatePiece(true);
 		changeOccured = 1;
 	}
 	
 	if(frameCount == 20)
 	{
-		shift(currentRot, -1, 0);
+		Grid_TranslatePiece(false);
 		changeOccured = 1;
 	}
 	if(frameCount == 15)
 	{
-		currentRot = (currentRot + 1) % 4;
-		shift(currentRot, 0, 0);
+		Grid_RotatePiece(true);
 		changeOccured = 1;
 	}
 	
-	if(changeOccured == 1)
+	if(changeOccured)
 	{
 		//Draw to Screen
-		for (int i = 0; i < 22; i++)
-		{
-			for(int k = 0; k < 10; k++)
-			{
-				if (i > 1)
-				{
-					if(lastGrid[i][k] - newGrid[i][k] > 0)
-						ST7735_DrawBitmap(k*8 + 48, (i*8)-16, &SquareBitmaps[0][0], 8, 8);
-					if(lastGrid[i][k] - newGrid[i][k] < 0)
-						ST7735_DrawBitmap(k*8 + 48, (i*8)-16, &SquareBitmaps[currentPiece+1][0], 8, 8);
-				}
-				
-				lastGrid[i][k] = newGrid[i][k];
-				newGrid[i][k] = 0;
-			}
-		}
-		changeOccured = 0;
+		Grid_Draw();
+		
+		changeOccured = false;
 	}
 
-	frameCount++;
+	++frameCount;
 }
 
 void resetBoard()

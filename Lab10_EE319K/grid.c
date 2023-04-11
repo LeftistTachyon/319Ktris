@@ -1,6 +1,14 @@
 #include "grid.h"
 #include "../inc/ST7735.h"
 
+// the actual visible grid (solidified minos only)
+uint8_t matrix[22][10];
+// the changes in the visible grid
+static int8_t changes[22][10];
+piece_t currPiece = P_NONE;
+piece_t heldPiece = P_NONE;
+uint8_t pX, pY, pRot;
+
 static uint8_t testOrientation(piece_t piece, 
 								 uint8_t rot,
 								 uint8_t x, uint8_t y) 
