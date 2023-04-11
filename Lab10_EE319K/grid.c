@@ -29,13 +29,6 @@ static uint8_t testOrientation(piece_t piece,
 	return 1;
 }
 
-// pulls a new piece from the piece queue
-void Grid_NewPiece() {
-	currPiece = PQ_PollPiece();
-	pX = 3;
-	pY = 1;
-	pRot = 0; // TODO: IRS
-}
 // add active piece to changes matrix
 static void AddActivePiece() {
 	for(uint8_t y = 0, x; y < 4; ++y) {
@@ -45,6 +38,19 @@ static void AddActivePiece() {
 		for(x = 0; x < 4; ++x) {
 			if(pX + x >= 0 && pX + x < 22) {
 				changes[pY + y][pX + x] += PieceColormaps[currPiece][pRot][y][x];
+			}
+		}
+	}
+}
+// forcefully add active piece to changes matrix
+static void AddActivePieceForce() {
+for(uint8_t y = 0, x; y < 4; ++y) {
+		if(pY + y < 0) continue;
+		if(pY + y >= 22) return;
+		
+		for(x = 0; x < 4; ++x) {
+			if(pX + x >= 0 && pX + x < 22) {
+				changes[pY + y][pX + x] = PieceColormaps[currPiece][pRot][y][x];
 			}
 		}
 	}
@@ -91,6 +97,16 @@ static void Grid_ClearChanges() {
 	}
 }
 
+// pulls a new piece from the piece queue
+void Grid_NewPiece() {
+	currPiece = PQ_PollPiece();
+	pX = 3;
+	pY = 1;
+	pRot = 0; // TODO: IRS
+	
+	AddActivePieceForce();
+}
+
 #define GRID_X 48
 #define GRID_Y -16
 // draws the matrix
@@ -100,10 +116,10 @@ void Grid_Draw() {
 			if(changes[y][x] == 0) continue;
 			if(changes[y][x] < 0) {
 				// less than zero: blank
-				ST7735_DrawBitmap(x*8 + GRID_X, y*8 + GRID_Y, &SquareBitmaps[0][0], 8, 8);
+				ST7735_DrawBitmap(x*8 + GRID_X, y*8 + GRID_Y + 8, &SquareBitmaps[0][0], 8, 8);
 			} else {
 				// more than zero: the given color
-				ST7735_DrawBitmap(x*8 + GRID_X, y*8 + GRID_Y, &SquareBitmaps[changes[y][x]+1][0], 8, 8);
+				ST7735_DrawBitmap(x*8 + GRID_X, y*8 + GRID_Y + 8, &SquareBitmaps[changes[y][x]][0], 8, 8);
 			}
 		}
 	}
@@ -225,15 +241,5 @@ void Grid_HoldPiece() {
 		currPiece = temp;
 	}
 	
-	// AddActivePiece(); // not += for this case, but =
-	for(uint8_t y = 0, x; y < 4; ++y) {
-		if(pY + y < 0) continue;
-		if(pY + y >= 22) return;
-		
-		for(x = 0; x < 4; ++x) {
-			if(pX + x >= 0 && pX + x < 22 && PieceColormaps[currPiece][pRot][y][x]) {
-				changes[pY + y][pX + x] = PieceColormaps[currPiece][pRot][y][x];
-			}
-		}
-	}
+	AddActivePieceForce(); // not += for this case, but =
 }

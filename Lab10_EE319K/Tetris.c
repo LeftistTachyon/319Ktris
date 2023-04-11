@@ -50,7 +50,9 @@ int main(void)
 	
   Output_Init();
 	resetBoard();
-	ST7735_FillScreen(0);
+	// ST7735_FillScreen(ST7735_BLACK);
+	ST7735_FillRect(0, 0, 48, 160, ST7735_WHITE);
+	ST7735_FillRect(48, 0, 80, 160, ST7735_BLACK);
 	
 	// spawnPiece(P_S,0);
 	// Timer4A_Init(&GameLoop, 2666667, 6);
