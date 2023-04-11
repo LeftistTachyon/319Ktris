@@ -44,6 +44,7 @@ int main(void)
 	EnableInterrupts();
 	
 	// DAC_Init();
+	ADC_Init();
 	// Wave_Init();
 	
 	//Timer2A_Start(); // start the sound
@@ -58,6 +59,8 @@ int main(void)
 	// PQ_Init();
 	Grid_Init();
 	Grid_NewPiece();
+	
+	Grid_RotatePiece(true);
 		
 	while(1)
 	{
@@ -121,15 +124,26 @@ static void postLockPiece() {
 #define DO_ROT_L		false
 #define DO_HOLD  		false
 #define DO_HARDDROP false
-#define DO_MOVE_L   false
-#define DO_MOVE_R   false
 #define DO_SOFTDROP false
 void GameLoop()
-{	
+{
 	// Get State of Input
+	sliderInput = slideInput();
 	
 	// Act on input
-	// DO_MOVE_L and DO_MOVE_R here
+	// DO_MOVE_R
+	if(sliderInput > 0)
+	{
+		Grid_TranslatePiece(true);
+		redraw = true;
+	}
+	// DO_MOVE_L
+	if(sliderInput < 0)
+	{
+		Grid_TranslatePiece(false);
+		redraw = true;
+	}
+	
 	if(DO_ROT_R) {
 		Grid_RotatePiece(true);
 		redraw = true;

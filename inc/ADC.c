@@ -28,7 +28,7 @@ void ADC_Init(void)
 	ADC0_PC_R = 0x01;
 	ADC0_SSPRI_R = 0x0123;
 	ADC0_ACTSS_R &= ~0x0008;
-	ADC0_SAC_R = 3;
+	ADC0_SAC_R = 4;
 	ADC0_EMUX_R &=  ~0xF000;
 	ADC0_SSMUX3_R = (ADC0_SSMUX3_R&0xFFFFFFF0)+5;
 	ADC0_SSCTL3_R = 0x0006;
@@ -50,4 +50,18 @@ uint32_t ADC_In(void){
 	return data;
 }
 
+int8_t slideInput(void)
+{
+	uint16_t slider = ADC_In();
+	if(slider > 3895)
+		return 2;
+	else if(slider <= 200)
+		return -2;
+	else if(slider <= 3895 && slider > 2664)
+		return 1;
+	else if(slider <= 2664 && slider > 1432)
+		return 0;
+  else
+		return -1;
+}
 

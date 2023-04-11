@@ -20,4 +20,6 @@ void ADC_Init(void);
 // Output: 12-bit result of ADC conversion
 // measures from PD2, analog channel 5
 uint32_t ADC_In(void);
+
+int8_t slideInput(void);
 #endif
