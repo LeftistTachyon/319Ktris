@@ -78,25 +78,25 @@ uint32_t Tri(uint16_t period, uint16_t count) {
 //        count is the length of the array
 // Output: none
 // special cases: as you wish to implement
-void Wave_Start(const uint8_t *pt, uint32_t count){
+void Wave_Play(const uint8_t *pt, uint32_t count){
  // write this
 
 }
 // start playing shoot
 void Wave_Shoot(void){
-	Wave_Start( shoot, shootsize);
+	Wave_Play( shoot, shootsize);
 }
 // start playing invaderkilled
 void Wave_Killed(void){
-	Wave_Start( invaderkilled, invaderkilledsize);
+	Wave_Play( invaderkilled, invaderkilledsize);
 }
 // start playing explosion
 void Wave_Explosion(void){
-  Wave_Start( explosion, explosionsize);
+  Wave_Play( explosion, explosionsize);
 }
 // start playing highpitch
 void Wave_Highpitch(void){
-  Wave_Start( highpitch, highpitchsize);
+  Wave_Play( highpitch, highpitchsize);
 }
 // 6-bit sounds, eampled at 11,025 kHz
 const uint8_t shoot[4080] = {

@@ -146,6 +146,7 @@ void GameLoop()
 	
 	// Get State of Input
 	setInputs();
+	
 	// Act on input
 	// DO_MOVE_R
 	if(sliderInput > 0)
@@ -289,68 +290,29 @@ void setInputs()
 {
 	sliderInput = slideInput();
 	
-	if(hDropPressed && !LAST_HARDDROP)
-		DO_HARDDROP = true;
-	else
-		LAST_HARDDROP = false;
+	DO_HARDDROP = hDropPressed && !LAST_HARDDROP;
+	LAST_HARDDROP = hDropPressed;
 	
-	if(sDropPressed && !LAST_SOFTDROP)
-		DO_SOFTDROP = true;
-	else
-		LAST_SOFTDROP = false;
+	DO_SOFTDROP = sDropPressed && !LAST_SOFTDROP;
+	LAST_SOFTDROP = sDropPressed;
 	
-	if(rotateCWPressed && !LAST_ROT_R)
-		DO_ROT_R = true;
-	else
-		LAST_ROT_R = false;
+	DO_ROT_R = rotateCWPressed && !LAST_ROT_R;
+	LAST_ROT_R = rotateCWPressed;
 	
-	if(rotateCCWPressed && !LAST_ROT_L)
-		DO_ROT_L = true;
-	else
-		LAST_ROT_L = false;
+	DO_ROT_L = rotateCCWPressed && !LAST_ROT_L;
+	LAST_ROT_L = rotateCCWPressed;
 	
-	if(holdPressed && !LAST_HOLD)
-		DO_HOLD = true;
-	else
-		LAST_HOLD = false;
+	DO_HOLD = holdPressed && !LAST_HOLD;
+	LAST_HOLD = holdPressed;
 }
 
 void clearInputs()
 {
-	if(DO_HARDDROP)
-	{
-		hDropPressed = false;
-		LAST_HARDDROP = true;
-		DO_HARDDROP = false;
-	}
-	
-	if(DO_SOFTDROP)
-	{
-		sDropPressed = false;
-		LAST_SOFTDROP = true;
-		DO_SOFTDROP = false;
-	}
-	
-	if(DO_ROT_R)
-	{
-		rotateCWPressed = false;
-		LAST_ROT_R = true;
-		DO_ROT_R = false;
-	}
-	
-	if(DO_ROT_L)
-	{
-		rotateCCWPressed = false;
-		LAST_ROT_L = true;
-		DO_ROT_L = false;
-	}
-	
-	if(DO_HOLD)
-	{ 
-		holdPressed = false;
-		LAST_HOLD = true;
-		DO_HOLD = false;
-	}
+	hDropPressed = false;
+	sDropPressed = false;
+	rotateCWPressed = false;
+	rotateCCWPressed = false;
+	holdPressed = false;
 }
 
 void Timer1A_Handler(void){ // can be used to perform tasks in background

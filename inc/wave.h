@@ -23,6 +23,7 @@ typedef enum SoundChannel {
 	Tri1, Tri2, Tri3, Tri4, Square1, Square2, Square3, Noise
 } soundchannel_t;
 
+#define DEFAULT_SOUND
 #ifdef DEFAULT_SOUND
 // 6-bit sounds, 11.025kHz sampling
 #define shootsize 4080
@@ -51,7 +52,7 @@ extern const uint8_t highpitch[highpitchsize];
 //        count is the length of the array
 // Output: none
 // special cases: as you wish to implement
-void Wave_Start(const uint8_t *pt, uint32_t count);
+void Wave_Play(const uint8_t *pt, uint32_t count);
 // stop wave output
 void Wave_Stop(void);
 // start playing shoot
