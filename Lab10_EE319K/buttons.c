@@ -15,14 +15,14 @@ void Button_Init(void){
 	rotateCCWPressed = false;
 	holdPressed = false;
 
-  GPIO_PORTE_DIR_R &= ~0x02;    // (c) make PE0-4 in (built-in button)
-  GPIO_PORTE_DEN_R |= 0x02;     //     enable digital I/O on PE0-4
-  GPIO_PORTE_PDR_R |= 0x02;     //     enable weak pull-down on PE0-4
-  GPIO_PORTE_IS_R &= ~0x02;     // (d) PE0-4 is edge-sensitive
-  GPIO_PORTE_IBE_R &= ~0x02;    //     PE0-4 is not both edges
-  GPIO_PORTE_IEV_R |= 0x02;    //     PE0-4 rising edge event
-  GPIO_PORTE_ICR_R |= 0x02;      // (e) clear flags
-  GPIO_PORTE_IM_R |= 0x02;      // (f) arm interrupt on PE0-4
+  GPIO_PORTE_DIR_R &= ~0x1E;    // (c) make PE0-4 in (built-in button)
+  GPIO_PORTE_DEN_R |= 0x1E;     //     enable digital I/O on PE0-4
+  GPIO_PORTE_PDR_R |= 0x1E;     //     enable weak pull-down on PE0-4
+  GPIO_PORTE_IS_R &= ~0x1E;     // (d) PE0-4 is edge-sensitive
+  GPIO_PORTE_IBE_R &= ~0x1E;    //     PE0-4 is not both edges
+  GPIO_PORTE_IEV_R |= 0x1E;    //     PE0-4 rising edge event
+  GPIO_PORTE_ICR_R |= 0x1E;      // (e) clear flags
+  GPIO_PORTE_IM_R |= 0x1E;      // (f) arm interrupt on PE0-4
   NVIC_PRI1_R = (NVIC_PRI1_R&0xFFFFFF1F)|0x00000000; // (g) priority 0
   NVIC_EN0_R = 0x00000010;      // (h) enable interrupt 4 in NVIC
 }

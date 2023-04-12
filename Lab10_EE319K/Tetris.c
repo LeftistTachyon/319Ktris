@@ -122,6 +122,10 @@ static void postLockPiece() {
 	redraw = true;
 }
 
+bool RIGHT = false;
+bool LEFT = false;
+uint32_t dasCount = 0;
+
 bool LAST_ROT_R = false;
 bool LAST_ROT_L =	false;
 bool LAST_HOLD = false;
@@ -142,17 +146,55 @@ void GameLoop()
 	// DO_MOVE_R
 	if(sliderInput > 0)
 	{
-		Grid_TranslatePiece(true);
-		redraw = true;
+		if(RIGHT)
+		{
+			if(dasCount >= 15)
+			{
+				Grid_TranslatePiece(true);
+				redraw = true;
+				dasCount = 0;
+			}
+			else
+				dasCount++;
+		}
+		else
+		{
+			dasCount = 1;
+			RIGHT = true;
+			Grid_TranslatePiece(true);
+			redraw = true;
+		}
 	}
 	// DO_MOVE_L
-	if(sliderInput < 0)
+	else if(sliderInput < 0)
 	{
-		Grid_TranslatePiece(false);
-		redraw = true;
+		if(LEFT)
+		{
+			if(dasCount >= 15)
+			{
+				Grid_TranslatePiece(false);
+				redraw = true;
+				dasCount = 0;
+			}
+			else
+				dasCount++;
+		}
+		else
+		{
+			dasCount = 1;
+			LEFT = true;
+			Grid_TranslatePiece(false);
+			redraw = true;
+		}
+	}
+	else
+	{
+		dasCount = 0;
+		RIGHT = false;
+	  LEFT = false;		
 	}
 	
-	if(DO_HARDDROP) {
+	if(DO_ROT_R) {
 		Grid_RotatePiece(true);
 		redraw = true;
 	} else if(DO_ROT_L) {
@@ -208,7 +250,7 @@ void GameLoop()
 		lockCount = LOCK_RESET;
 		
 		postLockPiece();
-	} else if(false) {
+	} else if(DO_HARDDROP) {
 		Grid_HardDrop();
 		Grid_Draw();
 		
@@ -225,12 +267,7 @@ void GameLoop()
 	}
 	
 	DisableInterrupts();
-	if(DO_HARDDROP)
-	{
-		hDropPressed = false;
-		LAST_HARDDROP = true;
-		DO_HARDDROP = false;
-	}
+	clearInputs();
 	EnableInterrupts();
 	
 }
@@ -296,7 +333,7 @@ void clearInputs()
 	}
 	
 	if(DO_HOLD)
-	{
+	{ 
 		holdPressed = false;
 		LAST_HOLD = true;
 		DO_HOLD = false;
