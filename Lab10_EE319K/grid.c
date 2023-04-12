@@ -233,7 +233,8 @@ void Grid_LockPiece() {
 		if(pY + y >= 22) break;
 		
 		for(x = 0; x < 4; ++x) {
-			if(pX + x >= 0 && pX + x < 22) {
+			if(pX + x >= 0 && pX + x < 22 
+					&& PieceColormaps[currPiece][pRot][y][x]) {
 				matrix[pY + y][pX + x] = PieceColormaps[currPiece][pRot][y][x];
 			}
 		}
