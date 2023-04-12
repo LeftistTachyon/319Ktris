@@ -238,6 +238,8 @@ void GameLoop()
 
 void setInputs()
 {
+	sliderInput = slideInput();
+	
 	if(hDropPressed && !LAST_HARDDROP)
 		DO_HARDDROP = true;
 	else
