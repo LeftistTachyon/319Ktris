@@ -122,7 +122,6 @@ static void postLockPiece() {
 	redraw = true;
 }
 
-
 bool LAST_ROT_R = false;
 bool LAST_ROT_L =	false;
 bool LAST_HOLD = false;

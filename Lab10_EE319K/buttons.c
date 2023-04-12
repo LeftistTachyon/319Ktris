@@ -1,13 +1,12 @@
 #include "buttons.h"
 
-
 bool sDropPressed;
 bool hDropPressed;
 bool rotateCWPressed;
 bool rotateCCWPressed;
 bool holdPressed;
 
-void Button_Init(void){       
+void Button_Init(void){ 
   SYSCTL_RCGCGPIO_R |= 0x00000010; // (a) activate clock for port E
 	
 	sDropPressed = false;
@@ -34,7 +33,7 @@ void GPIOPortE_Handler(void)
 	//Set Boolean Flags
 	if(GPIO_PORTE_RIS_R > 0)
 	{
-		sDropPressed = (GPIO_PORTE_RIS_R&0x01);
+		sDropPressed = (GPIO_PORTE_RIS_R&0x01);			
 		hDropPressed = (GPIO_PORTE_RIS_R&0x02);
 		rotateCWPressed = (GPIO_PORTE_RIS_R&0x04);
 		rotateCCWPressed = (GPIO_PORTE_RIS_R&0x08);
