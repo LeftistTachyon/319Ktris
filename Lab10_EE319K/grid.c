@@ -100,8 +100,8 @@ static void Grid_ClearChanges() {
 // pulls a new piece from the piece queue
 void Grid_NewPiece() {
 	currPiece = PQ_PollPiece();
-	// pX = 3;
-	pX = 0;
+	 pX = 3;
+	// pX = 0;
 	pY = 1;
 	pRot = 0; // TODO: IRS
 	
@@ -253,6 +253,10 @@ void Grid_HoldPiece() {
 		heldPiece = currPiece;
 		currPiece = temp;
 	}
+	
+	pX = 3;
+	pY = 1;
+	pRot = 0;
 	
 	AddActivePieceForce(); // not += for this case, but =
 }
