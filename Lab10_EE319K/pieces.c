@@ -348,7 +348,7 @@ static piece_t bag[] = {P_L, P_J, P_T, P_Z, P_O, P_S, P_I};
 void RandomizeBag() {
 	// bag = {P_L, P_J, P_T, P_Z, P_O, P_S, P_I};
 	for(uint8_t i = 0, j, temp; i < 7; i++) {
-		j = Random32(BagRandomizer) % (8 - i);
+		j = Random32(BagRandomizer) % (7 - i);
 		
 		temp = bag[i];
 		bag[i] = bag[j];
