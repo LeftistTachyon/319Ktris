@@ -61,8 +61,6 @@ int main(void)
 	// PQ_Init();
 	Grid_Init();
 	Grid_NewPiece();
-	
-	Grid_RotatePiece(true);
 		
 	while(1)
 	{
@@ -219,26 +217,31 @@ void GameLoop()
 	// if the user wants to soft drop... 
 	if(DO_SOFTDROP) {
 		// locking, not dropping
-		if(lockCount != LOCK_RESET) {
-			lockCount = (lockCount - 1) & 0x08; // hurry up locking
-		} else
-		// if it's time to soft drop, do it
-		if(--softDropCount == 0) {
-			Grid_SoftDrop();
-			softDropCount = SOFTDROP_RESET;
-			redraw = true;
-			
-			++score;
-			
-			// post-drop check: if at bottom, start locking
-			if(!testOrientation(currPiece, pRot, pX, pY + 1)) {
-				--lockCount;
+		if(lockCount == LOCK_RESET || 
+				testOrientation(currPiece, pRot, pX, pY + 1)) {
+			lockCount = LOCK_RESET;
+			// if it's time to soft drop, do it
+			if(--softDropCount == 0) {
+				Grid_SoftDrop();
+				softDropCount = SOFTDROP_RESET;
+				redraw = true;
+				
+				++score;
+				
+				// post-drop check: if at bottom, start locking
+				if(!testOrientation(currPiece, pRot, pX, pY + 1)) {
+					--lockCount;
+				}
 			}
+		} else {
+			lockCount = (lockCount - 1) & 0x08; // hurry up locking
 		}
 	} else {
 		softDropCount = SOFTDROP_RESET; // reset soft drop if not dropping
 		
-		if(lockCount == LOCK_RESET) { // not locking, dropping
+		if(lockCount == LOCK_RESET || 
+				testOrientation(currPiece, pRot, pX, pY + 1)) { // not locking, dropping
+			lockCount = LOCK_RESET; // ain't locking
 			if(--gravityCount == 0) {
 				Grid_SoftDrop();
 				gravityCount = GRAVITY_RESET;
@@ -250,7 +253,7 @@ void GameLoop()
 				}
 			}
 		} else { // not dropping, locking
-			--lockCount;
+			--lockCount; // actually locking
 		}
 	}
 	if(lockCount == 0) {

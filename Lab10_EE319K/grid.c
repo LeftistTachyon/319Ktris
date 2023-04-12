@@ -49,7 +49,8 @@ for(uint8_t y = 0, x; y < 4; ++y) {
 		if(pY + y >= 22) return;
 		
 		for(x = 0; x < 4; ++x) {
-			if(pX + x >= 0 && pX + x < 22) {
+			if(pX + x >= 0 && pX + x < 22
+					&& PieceColormaps[currPiece][pRot][y][x]) {
 				changes[pY + y][pX + x] = PieceColormaps[currPiece][pRot][y][x];
 			}
 		}
