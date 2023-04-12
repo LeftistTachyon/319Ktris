@@ -56,7 +56,7 @@ int main(void)
 	ST7735_FillRect(0, 0, 48, 160, ST7735_WHITE);
 	ST7735_FillRect(48, 0, 80, 160, ST7735_BLACK);
 	
-	// Timer4A_Init(&GameLoop, 2666667, 6);
+	Timer4A_Init(&GameLoop, 2666667, 6);
 	
 	// PQ_Init();
 	Grid_Init();
@@ -66,7 +66,6 @@ int main(void)
 		
 	while(1)
 	{
-		GameLoop();
 	}
 }
 
@@ -79,6 +78,10 @@ uint8_t softDropCount = SOFTDROP_RESET;
 
 static bool redraw = false;
 static uint32_t score;
+
+bool RIGHT = false;
+bool LEFT = false;
+uint32_t dasCount = 0;
 
 static void postLockPiece() {
 	static uint8_t combo = 0;
@@ -117,15 +120,15 @@ static void postLockPiece() {
 	lockCount = LOCK_RESET;
 	softDropCount = SOFTDROP_RESET;
 	
+	dasCount = 0;
+	RIGHT = false;
+	LEFT = false;		
+	
 	Grid_Draw();
 	Grid_NewPiece();
 	
 	redraw = true;
 }
-
-bool RIGHT = false;
-bool LEFT = false;
-uint32_t dasCount = 0;
 
 bool LAST_ROT_R = false;
 bool LAST_ROT_L =	false;
@@ -207,6 +210,10 @@ void GameLoop()
 		redraw = true;
 		gravityCount = GRAVITY_RESET;
 		lockCount = LOCK_RESET;
+		
+		dasCount = 0;
+		RIGHT = false;
+	  LEFT = false;		
 	}
 	
 	// if the user wants to soft drop... 
