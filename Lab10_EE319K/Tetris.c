@@ -54,7 +54,7 @@ int main(void)
 	ST7735_FillRect(0, 0, 48, 160, ST7735_WHITE);
 	ST7735_FillRect(48, 0, 80, 160, ST7735_BLACK);
 	
-	Timer4A_Init(&GameLoop, 2666667, 6);
+	// Timer4A_Init(&GameLoop, 2666667, 6);
 	
 	// PQ_Init();
 	Grid_Init();
@@ -64,6 +64,7 @@ int main(void)
 		
 	while(1)
 	{
+		GameLoop();
 	}
 }
 

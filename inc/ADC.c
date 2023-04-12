@@ -23,8 +23,11 @@ void ADC_Init(void)
 	GPIO_PORTD_AMSEL_R |= ~0x4;
 	
 	SYSCTL_RCGCADC_R |= 0x1;
-	while((SYSCTL_PRADC_R & 0x1) == 0){
-	}
+	//while((SYSCTL_PRADC_R & 0x1) == 0){
+	//}
+	SYSCTL_RCGCADC_R |= 0x1; // spin
+	SYSCTL_RCGCADC_R |= 0x1; // spin
+	SYSCTL_RCGCADC_R |= 0x1; // spin
 	ADC0_PC_R = 0x01;
 	ADC0_SSPRI_R = 0x0123;
 	ADC0_ACTSS_R &= ~0x0008;
