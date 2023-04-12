@@ -27,3 +27,4 @@ int8_t sliderInput;
 
 //Game Functions
 void GameLoop(); //Main Update Method
+void setInputs();

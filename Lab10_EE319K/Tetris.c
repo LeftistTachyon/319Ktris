@@ -36,6 +36,8 @@
 #include "Tetris.h"
 #include "grid.h"
 #include "garbage.h"
+#include "buttons.h"
+
 int main(void)
 { 
   DisableInterrupts();
@@ -44,6 +46,7 @@ int main(void)
 	
 	// DAC_Init();
 	ADC_Init();
+	Button_Init();
 	// Wave_Init();
 	
 	//Timer2A_Start(); // start the sound
@@ -119,16 +122,23 @@ static void postLockPiece() {
 	redraw = true;
 }
 
-#define DO_ROT_R 		false
-#define DO_ROT_L		false
-#define DO_HOLD  		false
-#define DO_HARDDROP false
-#define DO_SOFTDROP false
+
+bool LAST_ROT_R = false;
+bool LAST_ROT_L =	false;
+bool LAST_HOLD = false;
+bool LAST_HARDDROP = false;
+bool LAST_SOFTDROP = false;
+
+bool DO_ROT_R = false;
+bool DO_ROT_L =	false;
+bool DO_HOLD = false;
+bool DO_HARDDROP = false;
+bool DO_SOFTDROP = false;
 void GameLoop()
 {
-	// Get State of Input
-	sliderInput = slideInput();
 	
+	// Get State of Input
+	setInputs();
 	// Act on input
 	// DO_MOVE_R
 	if(sliderInput > 0)
@@ -143,7 +153,7 @@ void GameLoop()
 		redraw = true;
 	}
 	
-	if(DO_ROT_R) {
+	if(DO_HARDDROP) {
 		Grid_RotatePiece(true);
 		redraw = true;
 	} else if(DO_ROT_L) {
@@ -199,7 +209,7 @@ void GameLoop()
 		lockCount = LOCK_RESET;
 		
 		postLockPiece();
-	} else if(DO_HARDDROP) {
+	} else if(false) {
 		Grid_HardDrop();
 		Grid_Draw();
 		
@@ -213,6 +223,82 @@ void GameLoop()
 		Grid_Draw();
 		
 		redraw = false;
+	}
+	
+	DisableInterrupts();
+	if(DO_HARDDROP)
+	{
+		hDropPressed = false;
+		LAST_HARDDROP = true;
+		DO_HARDDROP = false;
+	}
+	EnableInterrupts();
+	
+}
+
+void setInputs()
+{
+	if(hDropPressed && !LAST_HARDDROP)
+		DO_HARDDROP = true;
+	else
+		LAST_HARDDROP = false;
+	
+	if(sDropPressed && !LAST_SOFTDROP)
+		DO_SOFTDROP = true;
+	else
+		LAST_SOFTDROP = false;
+	
+	if(rotateCWPressed && !LAST_ROT_R)
+		DO_ROT_R = true;
+	else
+		LAST_ROT_R = false;
+	
+	if(rotateCCWPressed && !LAST_ROT_L)
+		DO_ROT_L = true;
+	else
+		LAST_ROT_L = false;
+	
+	if(holdPressed && !LAST_HOLD)
+		DO_HOLD = true;
+	else
+		LAST_HOLD = false;
+}
+
+void clearInputs()
+{
+	if(DO_HARDDROP)
+	{
+		hDropPressed = false;
+		LAST_HARDDROP = true;
+		DO_HARDDROP = false;
+	}
+	
+	if(DO_SOFTDROP)
+	{
+		sDropPressed = false;
+		LAST_SOFTDROP = true;
+		DO_SOFTDROP = false;
+	}
+	
+	if(DO_ROT_R)
+	{
+		rotateCWPressed = false;
+		LAST_ROT_R = true;
+		DO_ROT_R = false;
+	}
+	
+	if(DO_ROT_L)
+	{
+		rotateCCWPressed = false;
+		LAST_ROT_L = true;
+		DO_ROT_L = false;
+	}
+	
+	if(DO_HOLD)
+	{
+		holdPressed = false;
+		LAST_HOLD = true;
+		DO_HOLD = false;
 	}
 }
 

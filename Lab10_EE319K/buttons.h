@@ -4,18 +4,18 @@
 
 
 //Button Connections
-//PE0 =
-//PE1 =
-//PE2 =
-//PE3 = 
-//PE4 =
+//PE0 = sDropPressed
+//PE1 = hDropPressed
+//PE2 = rotateCWPressed
+//PE3 = rotateCCWPressed
+//PE4 = holdPressed
 
 //Button Flags
-bool sDropPressed;
-bool hDropPressed;
-bool rotateCWPressed;
-bool rotateCCWPressed;
-bool holdPressed;
+extern bool sDropPressed;
+extern bool hDropPressed;
+extern bool rotateCWPressed;
+extern bool rotateCCWPressed;
+extern bool holdPressed;
 
 //Initalizes GPIO Interrupts on PortE
 void Button_Init(void);
