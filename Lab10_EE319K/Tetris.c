@@ -36,7 +36,6 @@
 #include "Tetris.h"
 #include "grid.h"
 #include "garbage.h"
-
 int main(void)
 { 
   DisableInterrupts();
