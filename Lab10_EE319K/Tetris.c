@@ -76,6 +76,7 @@ uint8_t softDropCount = SOFTDROP_RESET;
 
 static bool redraw = false;
 static uint32_t score;
+static bool allowHold = true;
 
 bool RIGHT = false;
 bool LEFT = false;
@@ -117,6 +118,7 @@ static void postLockPiece() {
 	gravityCount = GRAVITY_RESET;
 	lockCount = LOCK_RESET;
 	softDropCount = SOFTDROP_RESET;
+	allowHold = true;
 	
 	dasCount = 0;
 	RIGHT = false;
@@ -203,11 +205,12 @@ void GameLoop()
 		Grid_RotatePiece(false);
 		redraw = true;
 	}
-	if(DO_HOLD) {
+	if(DO_HOLD && allowHold) {
 		Grid_HoldPiece();
 		redraw = true;
 		gravityCount = GRAVITY_RESET;
 		lockCount = LOCK_RESET;
+		allowHold = false;
 		
 		dasCount = 0;
 		RIGHT = false;
@@ -280,7 +283,6 @@ void GameLoop()
 	DisableInterrupts();
 	clearInputs();
 	EnableInterrupts();
-	
 }
 
 void setInputs()
