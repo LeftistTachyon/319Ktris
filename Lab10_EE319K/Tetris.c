@@ -163,21 +163,22 @@ static void postLockPiece() {
 		switch(linesCleared) {
 			case 4:
 				linesToSend = 4;
-				score += 400;
+				score += 12000;
 				break;
 			case 3:
 				linesToSend = 2;
-				score += 1000;
+				score += 3000;
 				break;
 			case 2:
 				linesToSend = 1;
-				score += 3000;
+				score += 1000;
 				break;
 			case 1:
 				linesToSend = 0;
-				score += 12000;
+				score += 400;
 				break;
 		}
+		score += combo * 300;
 		linesToSend += combo++;
 		
 		linesToSend = GQ_CounterGarbage(linesToSend);
