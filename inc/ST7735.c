@@ -1772,7 +1772,7 @@ int ferror(FILE *f){
 // Inputs: none
 // Outputs: none
 void Output_Init(void){
-  ST7735_InitR(INITR_BLACKTAB); // NOTE: this is different per person
+  ST7735_InitR(INITR_GREENTAB); // NOTE: this is different per person
   ST7735_FillScreen(0);                 // set screen to black
 }
 
