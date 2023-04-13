@@ -19,13 +19,13 @@
 // Input: none
 // Output: none
 void DAC_Init(void){
-	SYSCTL_RCGCGPIO_R |= 0x10;
-	while((SYSCTL_PRGPIO_R & 0x10) == 0) {
+	SYSCTL_RCGCGPIO_R |= 0x02;
+	while((SYSCTL_PRGPIO_R & 0x02) == 0) {
 	}
 	
-	GPIO_PORTE_DIR_R |= 0x3F;
-	GPIO_PORTE_DR8R_R |= 0x3F;
-	GPIO_PORTE_DEN_R |= 0x3F;
+	GPIO_PORTB_DIR_R |= 0x3F;
+	GPIO_PORTB_DR8R_R |= 0x3F;
+	GPIO_PORTB_DEN_R |= 0x3F;
 }
 
 // **************DAC_Out*********************
@@ -34,5 +34,5 @@ void DAC_Init(void){
 // Input=n is converted to n*3.3V/63
 // Output: none
 void DAC_Out(uint8_t data){
-  GPIO_PORTE_DATA_R = (GPIO_PORTE_DATA_R & ~0x3F) | (data & 0x3F);
+  GPIO_PORTB_DATA_R = (GPIO_PORTB_DATA_R & ~0x3F) | (data & 0x3F);
 }

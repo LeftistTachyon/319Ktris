@@ -134,7 +134,8 @@ bool LAST_ROT_R = false;
 bool LAST_ROT_L =	false;
 bool LAST_HOLD = false;
 bool LAST_HARDDROP = false;
-bool LAST_SOFTDROP = false;
+// bool LAST_SOFTDROP = false;
+int8_t lastSliderInput = 0;
 
 bool DO_ROT_R = false;
 bool DO_ROT_L =	false;
@@ -149,54 +150,17 @@ void GameLoop()
 	
 	// Act on input
 	// DO_MOVE_R
-	if(sliderInput > 0)
-	{
-		if(RIGHT)
-		{
-			if(dasCount >= 15)
-			{
-				Grid_TranslatePiece(true);
-				redraw = true;
-				dasCount = 0;
-			}
-			else
-				dasCount++;
+	if(sliderInput != 0 && dasCount-- == 0) {
+		Grid_TranslatePiece(sliderInput > 0);
+		redraw = true;
+		
+		if(lastSliderInput == 0) {
+			dasCount = 15;
+		} else if(sliderInput == 1 || sliderInput == -1) {
+			dasCount = 6;
+		} else {
+			dasCount = 3;
 		}
-		else
-		{
-			dasCount = 1;
-			RIGHT = true;
-			Grid_TranslatePiece(true);
-			redraw = true;
-		}
-	}
-	// DO_MOVE_L
-	else if(sliderInput < 0)
-	{
-		if(LEFT)
-		{
-			if(dasCount >= 15)
-			{
-				Grid_TranslatePiece(false);
-				redraw = true;
-				dasCount = 0;
-			}
-			else
-				dasCount++;
-		}
-		else
-		{
-			dasCount = 1;
-			LEFT = true;
-			Grid_TranslatePiece(false);
-			redraw = true;
-		}
-	}
-	else
-	{
-		dasCount = 0;
-		RIGHT = false;
-	  LEFT = false;		
 	}
 	
 	if(DO_ROT_R) {
@@ -288,13 +252,13 @@ void GameLoop()
 
 void setInputs()
 {
+	lastSliderInput = sliderInput;
 	sliderInput = slideInput();
 	
 	DO_HARDDROP = hDropPressed && !LAST_HARDDROP;
 	LAST_HARDDROP = hDropPressed;
 	
-	DO_SOFTDROP = sDropPressed && !LAST_SOFTDROP;
-	LAST_SOFTDROP = sDropPressed;
+	DO_SOFTDROP = sDropPressed;
 	
 	DO_ROT_R = rotateCWPressed && !LAST_ROT_R;
 	LAST_ROT_R = rotateCWPressed;
@@ -309,7 +273,7 @@ void setInputs()
 void clearInputs()
 {
 	hDropPressed = false;
-	sDropPressed = false;
+	// sDropPressed = false;
 	rotateCWPressed = false;
 	rotateCCWPressed = false;
 	holdPressed = false;
