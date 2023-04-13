@@ -37,6 +37,7 @@
 #include "grid.h"
 #include "garbage.h"
 #include "buttons.h"
+#include "screensel.h"
 
 void ST7735_DrawRect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color) {
 	ST7735_DrawFastHLine(x, y, w, color);
@@ -58,7 +59,8 @@ int main(void)
 	
 	//Timer2A_Start(); // start the sound
 	
-  Output_Init();
+  // Output_Init();
+	ST7735_InitR(SCREEN_TYPE);
 	// ST7735_FillScreen(ST7735_BLACK);
 	ST7735_FillRect(0, 0, 48, 160, ST7735_WHITE);
 	ST7735_FillRect(48, 0, 80, 160, ST7735_BLACK);

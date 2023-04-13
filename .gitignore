@@ -11,6 +11,8 @@
 !Lab10_EE319K/**/*.s
 # except for this one thing
 Lab10_EE319K/RTE/_SpaceInvaders/RTE_Components.h
+# except for this particular header file
+Lab10_EE319K/screensel.h
 
 # include "inc" sources
 !inc/**/*.c
