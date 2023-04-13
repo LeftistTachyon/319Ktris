@@ -23,3 +23,5 @@ bool DO_HARDDROP;
 void GameLoop(); //Main Update Method
 void setInputs();
 void clearInputs();
+
+static void redrawNextQueue();

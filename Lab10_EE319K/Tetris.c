@@ -40,8 +40,8 @@
 
 void ST7735_DrawRect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color) {
 	ST7735_DrawFastHLine(x, y, w, color);
-	ST7735_DrawFastVLine(x + w, y, h, color);
-	ST7735_DrawFastHLine(x, y + h, w, color);
+	ST7735_DrawFastVLine(x + w - 1, y, h, color);
+	ST7735_DrawFastHLine(x, y + h - 1, w, color);
 	ST7735_DrawFastVLine(x, y, h, color);
 }
 
@@ -63,19 +63,26 @@ int main(void)
 	ST7735_FillRect(0, 0, 48, 160, ST7735_WHITE);
 	ST7735_FillRect(48, 0, 80, 160, ST7735_BLACK);
 	
+	ST7735_FillRect(46, 0, 2, 63, 0b1010110101010101);
+	ST7735_FillRect(46, 63, 2, 97, ST7735_RED);
+	
 	ST7735_DrawRect(2, 4, 42, 26, ST7735_BLACK);
+	ST7735_DrawRect(2, 33, 42, 26, ST7735_BLACK);
+	ST7735_DrawRect(2, 58, 34, 22, ST7735_BLACK);
+	ST7735_DrawRect(2, 79, 34, 22, ST7735_BLACK);
 	
 	Timer4A_Init(&GameLoop, 2666667, 6);
 	
 	// PQ_Init();
 	Grid_Init();
 	Grid_NewPiece();
+	
+	redrawNextQueue();
 		
 	while(1)
 	{
 	}
 }
-
 
 #define HOLD_X 7
 #define HOLD_Y 9
@@ -88,6 +95,45 @@ static void redrawHold() {
 		for(x = 0; x < 4; ++x) {
 			temp = PieceColormaps[heldPiece][0][y][x];
 			ST7735_FillRect(HOLD_X + x * 8, HOLD_Y - 8 + y * 8, 8, 8, temp ? SquareBitmaps[temp][0] : ST7735_WHITE);
+		}
+	}
+}
+
+#define PREVIEW_X 7
+#define PREVIEW1_Y 38
+#define PREVIEW2_Y 63
+#define PREVIEW3_Y 84
+static void redrawNextQueue() {
+	// piece one
+	piece_t piece = PQ_Preview(0);
+	if(piece == P_NONE) {
+		ST7735_FillRect(PREVIEW_X, PREVIEW1_Y + 16, 32, 16, ST7735_WHITE);
+	} else for(uint8_t y = 1, x, temp; y < 3; ++y) {
+		for(x = 0; x < 4; ++x) {
+			temp = PieceColormaps[piece][0][y][x];
+			ST7735_FillRect(PREVIEW_X + x * 8, PREVIEW1_Y - 8 + y * 8, 8, 8, temp ? SquareBitmaps[temp][0] : ST7735_WHITE);
+		}
+	}
+	
+	// piece two
+	piece = PQ_Preview(1);
+	if(piece == P_NONE) {
+		ST7735_FillRect(PREVIEW_X, PREVIEW2_Y + 12, 24, 12, ST7735_WHITE);
+	} else for(uint8_t y = 1, x, temp; y < 3; ++y) {
+		for(x = 0; x < 4; ++x) {
+			temp = PieceColormaps[piece][0][y][x];
+			ST7735_FillRect(PREVIEW_X + x * 6, PREVIEW2_Y - 6 + y * 6, 6, 6, temp ? SquareBitmaps[temp][0] : ST7735_WHITE);
+		}
+	}
+	
+	// piece three
+	piece = PQ_Preview(2);
+	if(piece == P_NONE) {
+		ST7735_FillRect(PREVIEW_X, PREVIEW3_Y + 12, 24, 12, ST7735_WHITE);
+	} else for(uint8_t y = 1, x, temp; y < 3; ++y) {
+		for(x = 0; x < 4; ++x) {
+			temp = PieceColormaps[piece][0][y][x];
+			ST7735_FillRect(PREVIEW_X + x * 6, PREVIEW3_Y - 6 + y * 6, 6, 6, temp ? SquareBitmaps[temp][0] : ST7735_WHITE);
 		}
 	}
 }
@@ -153,6 +199,8 @@ static void postLockPiece() {
 	Grid_NewPiece();
 	
 	// TODO: check for death
+	
+	redrawNextQueue();
 	
 	redraw = true;
 }
