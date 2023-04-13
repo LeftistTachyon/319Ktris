@@ -38,6 +38,13 @@
 #include "garbage.h"
 #include "buttons.h"
 
+void ST7735_DrawRect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color) {
+	ST7735_DrawFastHLine(x, y, w, color);
+	ST7735_DrawFastVLine(x + w, y, h, color);
+	ST7735_DrawFastHLine(x, y + h, w, color);
+	ST7735_DrawFastVLine(x, y, h, color);
+}
+
 int main(void)
 { 
   DisableInterrupts();
@@ -56,6 +63,8 @@ int main(void)
 	ST7735_FillRect(0, 0, 48, 160, ST7735_WHITE);
 	ST7735_FillRect(48, 0, 80, 160, ST7735_BLACK);
 	
+	ST7735_DrawRect(2, 4, 42, 26, ST7735_BLACK);
+	
 	Timer4A_Init(&GameLoop, 2666667, 6);
 	
 	// PQ_Init();
@@ -64,6 +73,22 @@ int main(void)
 		
 	while(1)
 	{
+	}
+}
+
+
+#define HOLD_X 7
+#define HOLD_Y 9
+static void redrawHold() {
+	if(heldPiece == P_NONE) {
+		ST7735_FillRect(HOLD_X, HOLD_Y + 16, 32, 16, ST7735_WHITE);
+		return;
+	}
+	for(uint8_t y = 1, x, temp; y < 3; ++y) {
+		for(x = 0; x < 4; ++x) {
+			temp = PieceColormaps[heldPiece][0][y][x];
+			ST7735_FillRect(HOLD_X + x * 8, HOLD_Y - 8 + y * 8, 8, 8, temp ? SquareBitmaps[temp][0] : ST7735_WHITE);
+		}
 	}
 }
 
@@ -127,6 +152,8 @@ static void postLockPiece() {
 	Grid_Draw();
 	Grid_NewPiece();
 	
+	// TODO: check for death
+	
 	redraw = true;
 }
 
@@ -144,7 +171,6 @@ bool DO_HARDDROP = false;
 bool DO_SOFTDROP = false;
 void GameLoop()
 {
-	
 	// Get State of Input
 	setInputs();
 	
@@ -180,6 +206,8 @@ void GameLoop()
 		dasCount = 0;
 		RIGHT = false;
 	  LEFT = false;		
+		
+		redrawHold();
 	}
 	
 	// if the user wants to soft drop... 
