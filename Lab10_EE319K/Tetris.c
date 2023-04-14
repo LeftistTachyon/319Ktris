@@ -178,7 +178,7 @@ static void postLockPiece() {
 	softDropCount = SOFTDROP_RESET;
 	allowHold = true;
 	
-	ST7735_SetCursor(1,13);
+	ST7735_SetCursor(0,13);
 	ST7735_OutUDec(score);
 	
 	dasCount = 0;
@@ -189,8 +189,8 @@ static void postLockPiece() {
 	
 	if(Grid_NewPiece()) //Check for Death
 	{
-		switchMenu();
-		gameState = Menu;
+		switchEnd();
+		gameState = End;
 	}
 	else
 	{
@@ -237,10 +237,10 @@ void switchGame()
 	ST7735_DrawRect(2, 58, 34, 22, ST7735_BLACK);
 	ST7735_DrawRect(2, 79, 34, 22, ST7735_BLACK);
 		
-	ST7735_SetCursor(1,12);
+	ST7735_SetCursor(0,12);
 	ST7735_OutString(LangScore[langState]);
 	
-	ST7735_SetCursor(1,13);
+	ST7735_SetCursor(0,13);
 	ST7735_OutUDec(score);
 
 	
@@ -251,7 +251,16 @@ void switchGame()
 
 void switchEnd()
 {
+	ST7735_InitR(SCREEN_TYPE2);
+	ST7735_FillScreen(ST7735_BLACK);
+	ST7735_DrawBitmap(0,30, logo, 125, 30);
 	
+	ST7735_SetCursor(3,4);
+	ST7735_OutString(LangGOver[langState]);
+	ST7735_SetCursor(5,6);
+	ST7735_OutString(LangScore[langState]);
+	ST7735_SetCursor(5,7);
+	ST7735_OutUDec(score);
 }
 
 uint8_t buttonSelect = -1;
@@ -305,9 +314,20 @@ void GameLoop()
 			}	
 			if(buttonSelect == 2)
 			{
+				DO_HARDDROP = false;
 				langState = (langState + 1) % 2;
 				switchMenu();
 			}
+		}
+	}
+	
+	if(gameState == End)
+	{
+		if(DO_HARDDROP)
+		{
+			gameState = Menu;
+			DO_HARDDROP = false;
+			switchMenu();
 		}
 	}
 	

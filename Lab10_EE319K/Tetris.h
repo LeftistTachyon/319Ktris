@@ -18,6 +18,11 @@ char LangScore[2][9] = {
 	"Puntaje:\0"
 };
 
+char LangGOver[2][16] = {
+	"Game Over\0      ",
+	"Juego Terminado\0"
+};
+
 
 State_t gameState;
 Language_t langState;
