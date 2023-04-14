@@ -67,8 +67,7 @@ int main(void)
 	
 	ST7735_FillRect(46, 0, 2, 63, 0b1010110101010101);
 	ST7735_FillRect(46, 63, 2, 97, 0b1111100000000000);
-	ST7735_DrawBitmap(0,32, The_319ktris_Company_logo, 31,31);
-	
+	ST7735_DrawBitmap(0,30, logo, 125, 30);
 	ST7735_DrawRect(2, 4, 42, 26, ST7735_BLACK);
 	ST7735_DrawRect(2, 33, 42, 26, ST7735_BLACK);
 	ST7735_DrawRect(2, 58, 34, 22, ST7735_BLACK);
