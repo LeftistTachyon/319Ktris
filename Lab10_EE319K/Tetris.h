@@ -8,6 +8,15 @@ void EnableInterrupts(void);  // Enable interrupts
 
 typedef enum {English, Spanish} Language_t; 
 typedef enum {Menu, P1, P2, End} State_t;
+char LangSelect[2][8] = {
+	"English\0",
+	"Espa\xA4ol\0"
+};
+
+
+
+State_t gameState;
+Language_t langState;
 
 //Sounds Stuff
 void Wave_SoundTick(uint8_t channels);
@@ -23,6 +32,7 @@ bool DO_HARDDROP;
 void GameLoop(); //Main Update Method
 void setInputs();
 void clearInputs();
+void switchMenu();
 
 static void redrawNextQueue();
 

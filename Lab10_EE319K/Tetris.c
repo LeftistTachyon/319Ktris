@@ -48,38 +48,39 @@ void ST7735_DrawRect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color)
 
 int main(void)
 { 
+	gameState = Menu;
+	langState = English;
+	
   DisableInterrupts();
   TExaS_Init(SCOPE);       // Bus clock is 80 MHz 
-	EnableInterrupts();
-	
 	// DAC_Init();
 	ADC_Init();
 	Button_Init();
 	// Wave_Init();
+	EnableInterrupts();
 	
 	//Timer2A_Start(); // start the sound
 	
   // Output_Init();
-	ST7735_InitR(SCREEN_TYPE);
-	// ST7735_FillScreen(ST7735_BLACK);
-	ST7735_FillRect(0, 0, 48, 160, ST7735_WHITE);
-	ST7735_FillRect(48, 0, 80, 160, ST7735_BLACK);
+	//ST7735_InitR(SCREEN_TYPE);
+	//ST7735_FillRect(0, 0, 48, 160, ST7735_WHITE);
+	//ST7735_FillRect(48, 0, 80, 160, ST7735_BLACK);
 	
-	ST7735_FillRect(46, 0, 2, 63, 0b1010110101010101);
-	ST7735_FillRect(46, 63, 2, 97, 0b1111100000000000);
-	ST7735_DrawBitmap(0,30, logo, 125, 30);
-	ST7735_DrawRect(2, 4, 42, 26, ST7735_BLACK);
-	ST7735_DrawRect(2, 33, 42, 26, ST7735_BLACK);
-	ST7735_DrawRect(2, 58, 34, 22, ST7735_BLACK);
-	ST7735_DrawRect(2, 79, 34, 22, ST7735_BLACK);
+	//ST7735_FillRect(46, 0, 2, 63, 0b1010110101010101);
+	//ST7735_FillRect(46, 63, 2, 97, 0b1111100000000000);
+	//ST7735_DrawRect(2, 4, 42, 26, ST7735_BLACK);
+	//ST7735_DrawRect(2, 33, 42, 26, ST7735_BLACK);
+	//ST7735_DrawRect(2, 58, 34, 22, ST7735_BLACK);
+	//ST7735_DrawRect(2, 79, 34, 22, ST7735_BLACK);
 	
+	switchMenu();
 	Timer4A_Init(&GameLoop, 2666667, 6);
 	
 	// PQ_Init();
-	Grid_Init();
-	Grid_NewPiece();
+	//Grid_Init();
+	//Grid_NewPiece();
 	
-	redrawNextQueue();
+	//redrawNextQueue();
 		
 	while(1)
 	{
@@ -208,6 +209,30 @@ static void postLockPiece() {
 	redraw = true;
 }
 
+void switchMenu()
+{
+	ST7735_InitR(SCREEN_TYPE2);
+	ST7735_FillScreen(ST7735_WHITE);
+	ST7735_DrawBitmap(0,30, logo, 125, 30);
+	
+	ST7735_FillRect(20,40,88,30,0x0000);
+	ST7735_FillRect(20,80,88,30,0x0000);
+	ST7735_FillRect(20,120,88,30,0x0000);
+	
+	ST7735_SetCursor(10,5);
+	ST7735_SetTextColor(0xFFFF);
+	ST7735_OutString("1P");
+	
+	ST7735_SetCursor(10,9);
+	ST7735_SetTextColor(0xFFFF);
+	ST7735_OutString("2P");
+	
+	ST7735_SetCursor(7,13);
+	ST7735_SetTextColor(0xFFFF);
+	ST7735_OutString(LangSelect[langState]);
+
+}
+
 bool LAST_ROT_R = false;
 bool LAST_ROT_L =	false;
 bool LAST_HOLD = false;
@@ -225,103 +250,110 @@ void GameLoop()
 	// Get State of Input
 	setInputs();
 	
-	// Act on input
-	// DO_MOVE_R
-	if(sliderInput != 0 && dasCount-- == 0) {
-		Grid_TranslatePiece(sliderInput > 0);
-		redraw = true;
-		
-		if(lastSliderInput == 0) {
-			dasCount = 15;
-		} else if(sliderInput == 1 || sliderInput == -1) {
-			dasCount = 6;
-		} else {
-			dasCount = 3;
-		}
-	}
-	
-	if(DO_ROT_R) {
-		Grid_RotatePiece(true);
-		redraw = true;
-	} else if(DO_ROT_L) {
-		Grid_RotatePiece(false);
-		redraw = true;
-	}
-	if(DO_HOLD && allowHold) {
-		Grid_HoldPiece();
-		redraw = true;
-		gravityCount = GRAVITY_RESET;
-		lockCount = LOCK_RESET;
-		allowHold = false;
-		
-		dasCount = 0;
-		RIGHT = false;
-	  LEFT = false;		
-		
-		redrawHold();
-	}
-	
-	// if the user wants to soft drop... 
-	if(DO_SOFTDROP) {
-		// locking, not dropping
-		if(lockCount == LOCK_RESET || 
-				testOrientation(currPiece, pRot, pX, pY + 1)) {
-			lockCount = LOCK_RESET;
-			// if it's time to soft drop, do it
-			if(--softDropCount == 0) {
-				Grid_SoftDrop();
-				softDropCount = SOFTDROP_RESET;
-				redraw = true;
-				
-				++score;
-				
-				// post-drop check: if at bottom, start locking
-				if(!testOrientation(currPiece, pRot, pX, pY + 1)) {
-					--lockCount;
-				}
-			}
-		} else {
-			lockCount = (lockCount - 1) & 0x08; // hurry up locking
-		}
-	} else {
-		softDropCount = SOFTDROP_RESET; // reset soft drop if not dropping
-		
-		if(lockCount == LOCK_RESET || 
-				testOrientation(currPiece, pRot, pX, pY + 1)) { // not locking, dropping
-			lockCount = LOCK_RESET; // ain't locking
-			if(--gravityCount == 0) {
-				Grid_SoftDrop();
-				gravityCount = GRAVITY_RESET;
-				redraw = true;
-				
-				// post-drop check: if at bottom, start locking
-				if(!testOrientation(currPiece, pRot, pX, pY + 1)) {
-					--lockCount;
-				}
-			}
-		} else { // not dropping, locking
-			--lockCount; // actually locking
-		}
-	}
-	if(lockCount == 0) {
-		Grid_LockPiece();
-		lockCount = LOCK_RESET;
-		
-		postLockPiece();
-	} else if(DO_HARDDROP) {
-		Grid_HardDrop();
-		Grid_Draw();
-		
-		postLockPiece();
-	}
-	
-	// Draw
-	if(redraw)
+	if(gameState == Menu)
 	{
-		//Draw to Screen
-		Grid_Draw();
+	}
+	
+	if(gameState == P1)
+	{
+		// Act on input
+		// DO_MOVE_R
+		if(sliderInput != 0 && dasCount-- == 0) {
+			Grid_TranslatePiece(sliderInput > 0);
+			redraw = true;
+			
+			if(lastSliderInput == 0) {
+				dasCount = 15;
+			} else if(sliderInput == 1 || sliderInput == -1) {
+				dasCount = 6;
+			} else {
+				dasCount = 3;
+			}
+		}
 		
-		redraw = false;
+		if(DO_ROT_R) {
+			Grid_RotatePiece(true);
+			redraw = true;
+		} else if(DO_ROT_L) {
+			Grid_RotatePiece(false);
+			redraw = true;
+		}
+		if(DO_HOLD && allowHold) {
+			Grid_HoldPiece();
+			redraw = true;
+			gravityCount = GRAVITY_RESET;
+			lockCount = LOCK_RESET;
+			allowHold = false;
+			
+			dasCount = 0;
+			RIGHT = false;
+			LEFT = false;		
+			
+			redrawHold();
+		}
+		
+		// if the user wants to soft drop... 
+		if(DO_SOFTDROP) {
+			// locking, not dropping
+			if(lockCount == LOCK_RESET || 
+					testOrientation(currPiece, pRot, pX, pY + 1)) {
+				lockCount = LOCK_RESET;
+				// if it's time to soft drop, do it
+				if(--softDropCount == 0) {
+					Grid_SoftDrop();
+					softDropCount = SOFTDROP_RESET;
+					redraw = true;
+					
+					++score;
+					
+					// post-drop check: if at bottom, start locking
+					if(!testOrientation(currPiece, pRot, pX, pY + 1)) {
+						--lockCount;
+					}
+				}
+			} else {
+				lockCount = (lockCount - 1) & 0x08; // hurry up locking
+			}
+		} else {
+			softDropCount = SOFTDROP_RESET; // reset soft drop if not dropping
+			
+			if(lockCount == LOCK_RESET || 
+					testOrientation(currPiece, pRot, pX, pY + 1)) { // not locking, dropping
+				lockCount = LOCK_RESET; // ain't locking
+				if(--gravityCount == 0) {
+					Grid_SoftDrop();
+					gravityCount = GRAVITY_RESET;
+					redraw = true;
+					
+					// post-drop check: if at bottom, start locking
+					if(!testOrientation(currPiece, pRot, pX, pY + 1)) {
+						--lockCount;
+					}
+				}
+			} else { // not dropping, locking
+				--lockCount; // actually locking
+			}
+		}
+		if(lockCount == 0) {
+			Grid_LockPiece();
+			lockCount = LOCK_RESET;
+			
+			postLockPiece();
+		} else if(DO_HARDDROP) {
+			Grid_HardDrop();
+			Grid_Draw();
+			
+			postLockPiece();
+		}
+		
+		// Draw
+		if(redraw)
+		{
+			//Draw to Screen
+			Grid_Draw();
+			
+			redraw = false;
+		}
 	}
 	
 	DisableInterrupts();
