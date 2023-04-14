@@ -62,25 +62,11 @@ int main(void)
 	//Timer2A_Start(); // start the sound
 	
   // Output_Init();
-	//ST7735_InitR(SCREEN_TYPE);
-	//ST7735_FillRect(0, 0, 48, 160, ST7735_WHITE);
-	//ST7735_FillRect(48, 0, 80, 160, ST7735_BLACK);
-	
-	//ST7735_FillRect(46, 0, 2, 63, 0b1010110101010101);
-	//ST7735_FillRect(46, 63, 2, 97, 0b1111100000000000);
-	//ST7735_DrawRect(2, 4, 42, 26, ST7735_BLACK);
-	//ST7735_DrawRect(2, 33, 42, 26, ST7735_BLACK);
-	//ST7735_DrawRect(2, 58, 34, 22, ST7735_BLACK);
-	//ST7735_DrawRect(2, 79, 34, 22, ST7735_BLACK);
 	
 	switchMenu();
 	Timer4A_Init(&GameLoop, 2666667, 6);
 	
 	// PQ_Init();
-	//Grid_Init();
-	//Grid_NewPiece();
-	
-	//redrawNextQueue();
 		
 	while(1)
 	{
@@ -230,15 +216,33 @@ void switchMenu()
 	ST7735_SetCursor(7,13);
 	ST7735_SetTextColor(0xFFFF);
 	ST7735_OutString(LangSelect[langState]);
-
 }
 
+void switchGame()
+{
+	ST7735_InitR(SCREEN_TYPE);
+	ST7735_FillRect(0, 0, 48, 160, ST7735_WHITE);
+	ST7735_FillRect(48, 0, 80, 160, ST7735_BLACK);
+	
+	ST7735_FillRect(46, 0, 2, 63, 0b1010110101010101);
+	ST7735_FillRect(46, 63, 2, 97, 0b1111100000000000);
+	ST7735_DrawRect(2, 4, 42, 26, ST7735_BLACK);
+	ST7735_DrawRect(2, 33, 42, 26, ST7735_BLACK);
+	ST7735_DrawRect(2, 58, 34, 22, ST7735_BLACK);
+	ST7735_DrawRect(2, 79, 34, 22, ST7735_BLACK);
+	
+	Grid_Init();
+	Grid_NewPiece();
+	redrawNextQueue();
+}
+
+uint8_t buttonSelect = -1;
 bool LAST_ROT_R = false;
 bool LAST_ROT_L =	false;
 bool LAST_HOLD = false;
 bool LAST_HARDDROP = false;
 // bool LAST_SOFTDROP = false;
-int8_t lastSliderInput = 0;
+int8_t lastSliderInput = -3;
 
 bool DO_ROT_R = false;
 bool DO_ROT_L =	false;
@@ -252,6 +256,41 @@ void GameLoop()
 	
 	if(gameState == Menu)
 	{
+		//Select Button
+		if(lastSliderInput != sliderInput)
+		{
+			ST7735_FillRect(113,32,10,130,0xFFFF);
+			if(sliderInput > 0)
+			{
+				ST7735_FillRect(113,130,10,10,ST7735_BLUE);
+				buttonSelect = 2;
+			}
+			if(sliderInput == 0)
+			{
+				ST7735_FillRect(113,90,10,10,ST7735_BLUE);
+				buttonSelect = 1;
+			}
+			if(sliderInput < 0)
+			{
+				ST7735_FillRect(113,50,10,10,ST7735_BLUE);
+				buttonSelect = 0;
+			}
+		}
+		
+		if(DO_HARDDROP) //Select
+		{
+			if(buttonSelect == 0)
+			{
+				switchGame();
+				DO_HARDDROP = false;
+				gameState = P1;
+			}	
+			if(buttonSelect == 2)
+			{
+				langState = (langState + 1) % 2;
+				switchMenu();
+			}
+		}
 	}
 	
 	if(gameState == P1)
