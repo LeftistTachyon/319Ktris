@@ -43,18 +43,20 @@ static void AddActivePiece() {
 	}
 }
 // forcefully add active piece to changes matrix
-static void AddActivePieceForce() {
+static uint8_t AddActivePieceForce() {
 for(uint8_t y = 0, x; y < 4; ++y) {
 		if(pY + y < 0) continue;
-		if(pY + y >= 22) return;
+		if(pY + y >= 22) return 0;
 		
 		for(x = 0; x < 4; ++x) {
-			if(pX + x >= 0 && pX + x < 22
-					&& PieceColormaps[currPiece][pRot][y][x]) {
+			if(matrix[pY + y][pX + x] > 0 && PieceColormaps[currPiece][pRot][y][x])
+				return 1;
+			if(pX + x >= 0 && pX + x < 22 && PieceColormaps[currPiece][pRot][y][x]) {
 				changes[pY + y][pX + x] = PieceColormaps[currPiece][pRot][y][x];
 			}
 		}
 	}
+	return 0;
 }
 // subtract active piece from changes matrix
 static void SubActivePiece() {
@@ -79,7 +81,7 @@ void Grid_Init() {
 	heldPiece = P_NONE;
 	// Grid_NewPiece(); // only if immediate start
 	currPiece = P_NONE;
-	
+		
 	// clear matrices
 	for(uint8_t y = 0, x; y < 22; ++y) {
 		for(x = 0; x < 10; ++x) {
@@ -99,14 +101,14 @@ static void Grid_ClearChanges() {
 }
 
 // pulls a new piece from the piece queue
-void Grid_NewPiece() {
+uint8_t Grid_NewPiece() {
 	currPiece = PQ_PollPiece();
 	 pX = 3;
 	// pX = 0;
 	pY = 1;
 	pRot = 0; // TODO: IRS
 	
-	AddActivePieceForce();
+	return AddActivePieceForce();
 }
 
 #define GRID_X 48

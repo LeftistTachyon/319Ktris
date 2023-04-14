@@ -13,6 +13,10 @@ char LangSelect[2][8] = {
 	"Espa\xA4ol\0"
 };
 
+char LangScore[2][9] = {
+	"Score:\0  ",
+	"Puntaje:\0"
+};
 
 
 State_t gameState;
@@ -33,6 +37,8 @@ void GameLoop(); //Main Update Method
 void setInputs();
 void clearInputs();
 void switchMenu();
+void switchGame();
+void switchEnd();
 
 static void redrawNextQueue();
 

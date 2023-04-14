@@ -19,7 +19,7 @@ uint8_t testOrientation(piece_t piece,
 // (re)initializes the grid
 void Grid_Init();
 // pulls a new piece from the piece queue
-void Grid_NewPiece();
+uint8_t Grid_NewPiece();
 // clears the changes matrix
 static void Grid_ClearChanges();
 // draws the grid

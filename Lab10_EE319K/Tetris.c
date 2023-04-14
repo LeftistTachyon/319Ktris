@@ -60,14 +60,10 @@ int main(void)
 	EnableInterrupts();
 	
 	//Timer2A_Start(); // start the sound
-	
-  // Output_Init();
-	
+		
 	switchMenu();
 	Timer4A_Init(&GameLoop, 2666667, 6);
-	
-	// PQ_Init();
-		
+			
 	while(1)
 	{
 	}
@@ -143,6 +139,7 @@ bool LEFT = false;
 uint32_t dasCount = 0;
 
 static void postLockPiece() {
+	score += 10;
 	static uint8_t combo = 0;
 	uint8_t linesCleared = Grid_ClearLines(), linesToSend;
 	
@@ -181,18 +178,25 @@ static void postLockPiece() {
 	softDropCount = SOFTDROP_RESET;
 	allowHold = true;
 	
+	ST7735_SetCursor(1,13);
+	ST7735_OutUDec(score);
+	
 	dasCount = 0;
 	RIGHT = false;
 	LEFT = false;		
 	
 	Grid_Draw();
-	Grid_NewPiece();
 	
-	// TODO: check for death
-	
-	redrawNextQueue();
-	
-	redraw = true;
+	if(Grid_NewPiece()) //Check for Death
+	{
+		switchMenu();
+		gameState = Menu;
+	}
+	else
+	{
+		redrawNextQueue();	
+		redraw = true;
+	}
 }
 
 void switchMenu()
@@ -210,19 +214,21 @@ void switchMenu()
 	ST7735_OutString("1P");
 	
 	ST7735_SetCursor(10,9);
-	ST7735_SetTextColor(0xFFFF);
 	ST7735_OutString("2P");
 	
 	ST7735_SetCursor(7,13);
-	ST7735_SetTextColor(0xFFFF);
 	ST7735_OutString(LangSelect[langState]);
 }
 
 void switchGame()
 {
+	
+	score = 0;
+	
 	ST7735_InitR(SCREEN_TYPE);
 	ST7735_FillRect(0, 0, 48, 160, ST7735_WHITE);
 	ST7735_FillRect(48, 0, 80, 160, ST7735_BLACK);
+  ST7735_FillRect(0,115,48,65, ST7735_BLACK);
 	
 	ST7735_FillRect(46, 0, 2, 63, 0b1010110101010101);
 	ST7735_FillRect(46, 63, 2, 97, 0b1111100000000000);
@@ -230,10 +236,22 @@ void switchGame()
 	ST7735_DrawRect(2, 33, 42, 26, ST7735_BLACK);
 	ST7735_DrawRect(2, 58, 34, 22, ST7735_BLACK);
 	ST7735_DrawRect(2, 79, 34, 22, ST7735_BLACK);
+		
+	ST7735_SetCursor(1,12);
+	ST7735_OutString(LangScore[langState]);
+	
+	ST7735_SetCursor(1,13);
+	ST7735_OutUDec(score);
+
 	
 	Grid_Init();
 	Grid_NewPiece();
 	redrawNextQueue();
+}
+
+void switchEnd()
+{
+	
 }
 
 uint8_t buttonSelect = -1;
