@@ -217,7 +217,7 @@ Skip_Noise
 	; final processing
 	SDIV R7, R10
 	ADD R7, R8
-	LSR R7, #17
+	LSR R7, #18
 	
 	; output
 	MOV R0, R7
