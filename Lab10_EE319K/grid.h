@@ -6,7 +6,7 @@
 #include "pieces.h"
 
 // the actual visible grid (solidified minos only)
-extern uint8_t matrix[22][10];
+extern uint8_t matrix[40][10];
 // the changes in the visible grid
 extern piece_t currPiece;
 extern piece_t heldPiece;

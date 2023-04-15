@@ -2,9 +2,9 @@
 #include "../inc/ST7735.h"
 
 // the actual visible grid (solidified minos only)
-uint8_t matrix[22][10];
+uint8_t matrix[40][10];
 // the changes in the visible grid
-static int8_t changes[22][10];
+static int8_t changes[40][10];
 piece_t currPiece = P_NONE;
 piece_t heldPiece = P_NONE;
 int8_t pX, pY, pRot;
@@ -18,8 +18,8 @@ uint8_t testOrientation(piece_t piece,
 			if(PieceColormaps[piece][rot][row][col]) {
 				if((absX = x + col) < 0 || 
 						absX >= 10 ||
-						(absY = y + row) >= 22 || 
-						// absY < 0 ||
+						(absY = y + row) >= 40 || 
+						 absY < 0 ||
 						matrix[absY][absX])
 					return 0;
 			}
@@ -33,10 +33,10 @@ uint8_t testOrientation(piece_t piece,
 static void AddActivePiece() {
 	for(uint8_t y = 0, x; y < 4; ++y) {
 		if(pY + y < 0) continue;
-		if(pY + y >= 22) return;
+		if(pY + y >= 40) return;
 		
 		for(x = 0; x < 4; ++x) {
-			if(pX + x >= 0 && pX + x < 22) {
+			if(pX + x >= 0 && pX + x < 10) {
 				changes[pY + y][pX + x] += PieceColormaps[currPiece][pRot][y][x];
 			}
 		}
@@ -46,12 +46,12 @@ static void AddActivePiece() {
 static uint8_t AddActivePieceForce() {
 for(uint8_t y = 0, x; y < 4; ++y) {
 		if(pY + y < 0) continue;
-		if(pY + y >= 22) return 0;
+		if(pY + y >= 40) return 0;
 		
 		for(x = 0; x < 4; ++x) {
 			if(matrix[pY + y][pX + x] > 0 && PieceColormaps[currPiece][pRot][y][x])
 				return 1;
-			if(pX + x >= 0 && pX + x < 22 && PieceColormaps[currPiece][pRot][y][x]) {
+			if(pX + x >= 0 && pX + x < 10 && PieceColormaps[currPiece][pRot][y][x]) {
 				changes[pY + y][pX + x] = PieceColormaps[currPiece][pRot][y][x];
 			}
 		}
@@ -62,10 +62,10 @@ for(uint8_t y = 0, x; y < 4; ++y) {
 static void SubActivePiece() {
 	for(uint8_t y = 0, x; y < 4; ++y) {
 		if(pY + y < 0) continue;
-		if(pY + y >= 22) return;
+		if(pY + y >= 40) return;
 		
 		for(x = 0; x < 4; ++x) {
-			if(pX + x >= 0 && pX + x < 22) {
+			if(pX + x >= 0 && pX + x < 10) {
 				changes[pY + y][pX + x] -= PieceColormaps[currPiece][pRot][y][x];
 			}
 		}
@@ -83,7 +83,7 @@ void Grid_Init() {
 	currPiece = P_NONE;
 		
 	// clear matrices
-	for(uint8_t y = 0, x; y < 22; ++y) {
+	for(uint8_t y = 0, x; y < 40; ++y) {
 		for(x = 0; x < 10; ++x) {
 			matrix[y][x] = 0;
 			changes[y][x] = 0;
@@ -93,7 +93,7 @@ void Grid_Init() {
 
 // clears the changes matrix
 static void Grid_ClearChanges() {
-	for(uint8_t y = 0, x; y < 22; ++y) {
+	for(uint8_t y = 0, x; y < 40; ++y) {
 		for(x = 0; x < 10; ++x) {
 			changes[y][x] = 0;
 		}
@@ -105,17 +105,17 @@ uint8_t Grid_NewPiece() {
 	currPiece = PQ_PollPiece();
 	 pX = 3;
 	// pX = 0;
-	pY = 1;
+	pY = 19;
 	pRot = 0; // TODO: IRS
 	
 	return AddActivePieceForce();
 }
 
 #define GRID_X 48
-#define GRID_Y -16
+#define GRID_Y -160
 // draws the matrix
 void Grid_Draw() {
-	for(uint8_t y = 2, x; y < 22; ++y) {
+	for(uint8_t y = 2, x; y < 40; ++y) {
 		for(x = 0; x < 10; ++x) {
 			if(changes[y][x] == 0) continue;
 			if(changes[y][x] < 0) {
@@ -238,10 +238,10 @@ uint8_t Grid_HardDrop() {
 void Grid_LockPiece() {
 	for(uint8_t y = 0, x; y < 4; ++y) {
 		if(pY + y < 0) continue;
-		if(pY + y >= 22) break;
+		if(pY + y >= 40) break;
 		
 		for(x = 0; x < 4; ++x) {
-			if(pX + x >= 0 && pX + x < 22 
+			if(pX + x >= 0 && pX + x < 10 
 					&& PieceColormaps[currPiece][pRot][y][x]) {
 				matrix[pY + y][pX + x] = PieceColormaps[currPiece][pRot][y][x];
 			}
@@ -263,7 +263,7 @@ void Grid_HoldPiece() {
 	}
 	
 	pX = 3;
-	pY = 1;
+	pY = 19;
 	pRot = 0;
 	
 	AddActivePieceForce(); // not += for this case, but =
