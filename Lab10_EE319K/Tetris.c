@@ -200,7 +200,7 @@ static void postLockPiece() {
 
 void switchMenu()
 {
-	ST7735_InitR(SCREEN_TYPE);
+	ST7735_InitR(SCREEN_TYPE2);
 	ST7735_FillScreen(ST7735_WHITE);
 	ST7735_DrawBitmap(0,30, logo, 125, 30);
 	
