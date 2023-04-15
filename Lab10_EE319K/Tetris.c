@@ -56,10 +56,14 @@ int main(void)
 	// DAC_Init();
 	ADC_Init();
 	Button_Init();
-	// Wave_Init();
+	Wave_Init();
 	EnableInterrupts();
 	
-	//Timer2A_Start(); // start the sound
+	//Wave_SetChannel(Tri1, 43);
+	//Wave_SetActiveChannels(1);
+	
+	Wave_Start(); // start the sound
+	Wave_Play(shoot,shootsize);
 		
 	switchMenu();
 	Timer4A_Init(&GameLoop, 2666667, 6);
