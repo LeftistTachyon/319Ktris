@@ -219,14 +219,19 @@ void Grid_SoftDrop() {
 }
 
 // hard drops the piece
-void Grid_HardDrop() {
+// returns how many the piece dropped
+uint8_t Grid_HardDrop() {
+	uint8_t output = 0;
+	
 	SubActivePiece();
 	while(testOrientation(currPiece, pRot, pX, pY + 1)) {
-		++pY;
+		++pY; ++output;
 	}
 	AddActivePiece();
 	
 	Grid_LockPiece();
+	
+	return output;
 }
 
 // locks the piece in place

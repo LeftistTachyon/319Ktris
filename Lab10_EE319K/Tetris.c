@@ -139,7 +139,6 @@ bool LEFT = false;
 uint32_t dasCount = 0;
 
 static void postLockPiece() {
-	score += 10;
 	static uint8_t combo = 0;
 	uint8_t linesCleared = Grid_ClearLines(), linesToSend;
 	
@@ -201,7 +200,7 @@ static void postLockPiece() {
 
 void switchMenu()
 {
-	ST7735_InitR(SCREEN_TYPE2);
+	ST7735_InitR(SCREEN_TYPE);
 	ST7735_FillScreen(ST7735_WHITE);
 	ST7735_DrawBitmap(0,30, logo, 125, 30);
 	
@@ -417,7 +416,7 @@ void GameLoop()
 			
 			postLockPiece();
 		} else if(DO_HARDDROP) {
-			Grid_HardDrop();
+			score += 5 * Grid_HardDrop();
 			Grid_Draw();
 			
 			postLockPiece();

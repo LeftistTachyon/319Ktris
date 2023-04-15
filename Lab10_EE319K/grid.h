@@ -34,7 +34,8 @@ void Grid_TranslatePiece(bool right);
 // drops the piece down once
 void Grid_SoftDrop();
 // hard drops the piece
-void Grid_HardDrop();
+// returns how many the piece dropped
+uint8_t Grid_HardDrop();
 // locks the piece in place
 void Grid_LockPiece();
 // holds the current piece
