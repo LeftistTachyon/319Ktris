@@ -216,7 +216,7 @@ void switchMenu()
 	ST7735_OutString("2P");
 	
 	ST7735_SetCursor(7,13);
-	ST7735_OutString(LangSelect[langState]);
+	ST7735_OutString(LangSelect[langState]);\
 }
 
 void switchGame()
@@ -262,7 +262,7 @@ void switchEnd()
 	ST7735_OutUDec(score);
 }
 
-uint8_t buttonSelect = -1;
+int8_t buttonSelect = -1;
 bool LAST_ROT_R = false;
 bool LAST_ROT_L =	false;
 bool LAST_HOLD = false;
@@ -283,7 +283,7 @@ void GameLoop()
 	if(gameState == Menu)
 	{
 		//Select Button
-		if(lastSliderInput != sliderInput)
+		if(lastSliderInput != sliderInput || buttonSelect == -1)
 		{
 			ST7735_FillRect(113,32,10,130,0xFFFF);
 			if(sliderInput > 0)
