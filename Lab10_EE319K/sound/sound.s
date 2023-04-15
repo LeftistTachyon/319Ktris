@@ -1,5 +1,6 @@
 	IMPORT DAC_Out
 	IMPORT Tri
+	IMPORT Square
 	EXPORT Wave_SoundTick
 	EXPORT Wave_SetChannel
 		
@@ -225,25 +226,6 @@ Skip_Noise
 	
 	; BX LR
 	POP {R4-R10, PC}
-	
-; R0: period (16 bits)
-; R1: count	 (up to period)
-; R8 + R10 scratch
-; R8: quarter period
-; R0: output
-Square
-	PUSH {R10, LR}
-	LDR R10, =MaxMag
-	LDR R10, [R10]
-	
-	CMP R1, R0, LSR #1
-	EORHS R10, #0xFFFFFFFF
-	ADDHS R10, #1
-	
-	MOV R0, R10
-	
-	; BX LR
-	POP {R10, PC}
 	
 ; R0: period (8 bits)
 ; R1: count	 (up to period)

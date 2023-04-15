@@ -63,9 +63,18 @@ void Timer2A_Handler(void){
 }
 
 #define MAX_MAG 0x003FFFFF
-uint32_t Tri(uint16_t period, uint16_t count) {
-	if(--count > (period >> 1)) count = period - count;
-	return count * MAX_MAG / (period >> 2) - MAX_MAG;
+// count E (0, period]
+int32_t Tri(uint16_t period, uint16_t count) {
+	float slope, output;
+	
+	if(count > (period >> 1)) count = period - count;
+	
+	slope = (float) MAX_MAG / (period >> 2);
+	output = count * slope - MAX_MAG;
+	return (int32_t) (output);
+}
+int32_t Square(uint16_t period, uint16_t count) {
+	return count >= (period >> 1) ? MAX_MAG : -MAX_MAG;
 }
 
 #ifdef DEFAULT_SOUND
