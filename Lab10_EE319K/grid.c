@@ -134,7 +134,7 @@ void Grid_Draw() {
 // clears lines on the matrix, updates changes accordingly
 // returns how many lines are cleared
 uint8_t Grid_ClearLines() {
-	uint8_t cleared = 0, oldY = 21, newY = 21, x;
+	uint8_t cleared = 0, oldY = 39, newY = 39, x;
 	
 	for(bool all, none; oldY >= 0; --oldY) {
 		for(x = 0, all = 1, none = 0; x < 10; ++x) {

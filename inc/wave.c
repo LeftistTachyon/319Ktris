@@ -45,7 +45,7 @@ void Wave_Stop(void){
 
 void Wave_Init(void){
     // initialize a 11.025kHz Timer2A, and the DAC
-  Timer2A_Init(80000000/11025, 1);
+  Timer2A_Init(80000000/11025, 2);
   Wave_Stop();    // 9) disable IRQ 23 NVIC
 	DAC_Init();
 }
@@ -63,7 +63,8 @@ void Timer2A_Handler(void){
   TIMER2_ICR_R = TIMER_ICR_TATOCINT;// acknowledge TIMER2A timeout
 	// output one value to DAC if a sound is active
 	DAC_Out(currentSong[i]);
-	i = (i + 1) % count;
+	if(i > count - 1)
+		Wave_Stop();
 	//Wave_SoundTick(ACTIVE_CHANNELS);
 }
 
@@ -88,6 +89,7 @@ void Wave_Play(const uint8_t *pt, uint32_t c){
 	i = 0;
  count = c;
 }
+
 // start playing shoot
 void Wave_Shoot(void){
 	Wave_Play( shoot, shootsize);
