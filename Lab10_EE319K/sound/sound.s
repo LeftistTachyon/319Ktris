@@ -47,7 +47,7 @@ NoiseChannel_Data
 NoiseChannel_Count
 	DCW 0 ; 1 counter
 	
-MaxMag    DCD 0x003FFFFF
+MaxMag    DCD 0x00400000
 		
 	ALIGN  
 		

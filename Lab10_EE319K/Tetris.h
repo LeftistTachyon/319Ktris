@@ -27,11 +27,6 @@ char LangGOver[2][16] = {
 State_t gameState;
 Language_t langState;
 
-//Sounds Stuff
-void Wave_SoundTick(uint8_t channels);
-void Wave_SetChannel(soundchannel_t channel, int16_t data);
-
-
 //Input Variables
 int8_t sliderInput;
 bool DO_HARDDROP;

@@ -12,6 +12,8 @@
 // initialize Wave functionality
 void Wave_Init(void);
 
+#define WAVE_FREQ 44100
+
 // start and stop
 void Wave_Start();
 void Wave_Stop();
@@ -22,6 +24,21 @@ void Wave_SetActiveChannels(uint8_t channels);
 typedef enum SoundChannel {
 	Tri1, Tri2, Tri3, Tri4, Square1, Square2, Square3, Noise
 } soundchannel_t;
+
+typedef struct SongNote {
+	uint16_t tones[8];
+	uint16_t delay; // in samples (/ prescale)
+} songnote_t;
+typedef struct Song {
+	uint16_t prescale; // for setting song-wide BPM
+	uint8_t numInsts; // number of instruments
+	uint16_t numNotes; // size of notes array
+	songnote_t notes[];
+} song_t;
+
+void Wave_PlaySong(const song_t *song);
+void Wave_LoopSong(const song_t *song);
+void Wave_SetChannel(soundchannel_t channel, uint16_t data);
 
 #define DEFAULT_SOUND
 #ifdef DEFAULT_SOUND
@@ -53,8 +70,6 @@ extern const uint8_t highpitch[highpitchsize];
 // Output: none
 // special cases: as you wish to implement
 void Wave_Play(const uint8_t *pt, uint32_t count);
-// stop wave output
-void Wave_Stop(void);
 // start playing shoot
 void Wave_Shoot(void);
 // start playing invaderkilled

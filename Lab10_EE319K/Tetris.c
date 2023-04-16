@@ -38,6 +38,7 @@
 #include "garbage.h"
 #include "buttons.h"
 #include "screensel.h"
+#include "songs.h"
 
 void ST7735_DrawRect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color) {
 	ST7735_DrawFastHLine(x, y, w, color);
@@ -59,12 +60,9 @@ int main(void)
 	Wave_Init();
 	EnableInterrupts();
 	
-	Wave_SetChannel(Square1, 100);
-	Wave_SetChannel(Square2, 67);
-	Wave_SetChannel(Square3, 84);
-	Wave_SetActiveChannels(3);
-	
 	Wave_Start(); // start the sound
+	
+	Wave_LoopSong(&sauls_nokia);
 		
 	switchMenu();
 	Timer4A_Init(&GameLoop, 2666667, 6);

@@ -8,6 +8,7 @@
 // 1/2/23
 
 #include <stdint.h>
+#include <stdbool.h>
 #include "../inc/tm4c123gh6pm.h"
 #include "../inc/wave.h"
 #include "../inc/DAC.h"
@@ -44,10 +45,44 @@ void Wave_Stop(void){
 }
 
 void Wave_Init(void){
-    // initialize a 11.025kHz Timer2A, and the DAC
-  Timer2A_Init(80000000/22050, 1);
+  // initialize a 11.025kHz Timer2A, and the DAC
+  Timer2A_Init(80000000/WAVE_FREQ, 1);
   Wave_Stop();    // 9) disable IRQ 23 NVIC
 	DAC_Init();
+}
+
+static bool isLoop;
+static uint16_t noteCnt = -1;
+static uint32_t toWait = -1;
+static const song_t *currSong;
+
+static void Wave_LoadNote(uint16_t idx) {
+	uint16_t prev = idx == 0 ? currSong->numNotes - 1 : idx - 1;
+	for(uint8_t i = 0; i < 8; i++) {
+	 	if(currSong->notes[idx].tones[i] != currSong->notes[prev].tones[i])
+			Wave_SetChannel(i, currSong->notes[idx].tones[i]);
+	}
+	toWait = currSong->prescale * currSong->notes[idx].delay;
+}
+static void Wave_CommonPlaySong(const song_t *song) {
+	noteCnt = 0;
+	currSong = song;
+	
+	Wave_SetActiveChannels(song->numInsts);
+	for(uint8_t i = 0; i < 8; i++) {
+		Wave_SetChannel(i, song->notes[0].tones[i]);
+	}
+	toWait = song->prescale * song->notes[0].delay;
+}
+
+void Wave_PlaySong(const song_t *song) {
+	isLoop = false;
+	Wave_CommonPlaySong(song);
+}
+
+void Wave_LoopSong(const song_t *song) {
+	isLoop = true;
+	Wave_CommonPlaySong(song);
 }
 
 static uint8_t ACTIVE_CHANNELS;
@@ -56,13 +91,29 @@ void Wave_SetActiveChannels(uint8_t channels) {
 }
 
 void Wave_SoundTick(uint8_t channels);
-void Timer2A_Handler(void){
-  TIMER2_ICR_R = TIMER_ICR_TATOCINT;// acknowledge TIMER2A timeout
+void Timer2A_Handler(void) {
+	// check for note update
+	if(noteCnt >= 0 && --toWait == 0) {
+		// advance note count, check for end
+		if(++noteCnt == currSong->numNotes) {
+			// at end of song
+			if(isLoop) {
+				Wave_LoadNote(noteCnt = 0);
+			} else {
+				noteCnt = toWait = -1;
+			}
+		} else Wave_LoadNote(noteCnt);
+	}
+	
 	// output one value to DAC if a sound is active
-	Wave_SoundTick(ACTIVE_CHANNELS);
+	if(noteCnt >= 0) {
+		Wave_SoundTick(ACTIVE_CHANNELS);
+	}
+	
+  TIMER2_ICR_R = TIMER_ICR_TATOCINT; // acknowledge TIMER2A timeout
 }
 
-#define MAX_MAG 0x003FFFFF
+#define MAX_MAG 0x00400000
 // count E (0, period]
 int32_t Tri(uint16_t period, uint16_t count) {
 	float slope, output;
