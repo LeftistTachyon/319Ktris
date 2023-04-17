@@ -30,7 +30,7 @@ typedef enum SoundChannel {
 extern const uint8_t shoot[shootsize];
 #define invaderkilledsize 3377
 extern const uint8_t invaderkilled[invaderkilledsize] ;
-#define explosionsize 2000
+#define explosionsize 2897
 extern const uint8_t explosion[explosionsize] ;
 #define fastinvader1size 982
 extern const uint8_t fastinvader1[fastinvader1size];
@@ -42,6 +42,8 @@ extern const uint8_t fastinvader3[fastinvader3size] ;
 extern const uint8_t fastinvader4[fastinvader4size] ;
 #define highpitchsize 1802
 extern const uint8_t highpitch[highpitchsize];
+#define hitsize 1481
+extern const unsigned char hit[1481];
 
 //******* Wave_Start ************
 // These functions do not output to the DAC. 

@@ -63,7 +63,6 @@ int main(void)
 	//Wave_SetActiveChannels(1);
 	
 	Wave_Start(); // start the sound
-	Wave_Play(shoot,shootsize);
 		
 	switchMenu();
 	Timer4A_Init(&GameLoop, 2666667, 6);
@@ -143,10 +142,12 @@ bool LEFT = false;
 uint32_t dasCount = 0;
 
 static void postLockPiece() {
+	Wave_Play(hit, hitsize);
 	static uint8_t combo = 0;
 	uint8_t linesCleared = Grid_ClearLines(), linesToSend;
 	
 	if(linesCleared > 0) {
+		Wave_Play(explosion, explosionsize);
 		switch(linesCleared) {
 			case 4:
 				linesToSend = 4;
@@ -431,7 +432,6 @@ void GameLoop()
 		{
 			//Draw to Screen
 			Grid_Draw();
-			
 			redraw = false;
 		}
 	}
