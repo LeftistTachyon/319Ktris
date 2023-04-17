@@ -7,6 +7,6 @@ extern const song_t octave;
 extern const song_t sauls_nokia;
 extern const song_t tetris_a;
 extern const song_t tetris_b;
-extern const song_t tetris_c;
+extern const song_t the_weapon;
 
 #endif
