@@ -62,7 +62,7 @@ int main(void)
 	
 	Wave_Start(); // start the sound
 	
-	Wave_LoopSong(&sauls_nokia);
+	Wave_LoopSong(&tetris_c);
 		
 	switchMenu();
 	Timer4A_Init(&GameLoop, 2666667, 6);

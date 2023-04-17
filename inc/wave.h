@@ -32,6 +32,7 @@ typedef struct SongNote {
 typedef struct Song {
 	uint16_t prescale; // for setting song-wide BPM
 	uint8_t numInsts; // number of instruments
+	uint8_t instSel;  // selection of instruments
 	uint16_t numNotes; // size of notes array
 	songnote_t notes[];
 } song_t;
@@ -39,6 +40,7 @@ typedef struct Song {
 void Wave_PlaySong(const song_t *song);
 void Wave_LoopSong(const song_t *song);
 void Wave_SetChannel(soundchannel_t channel, uint16_t data);
+void Wave_SetInsts(uint8_t insts);
 
 #define DEFAULT_SOUND
 #ifdef DEFAULT_SOUND

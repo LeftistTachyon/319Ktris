@@ -3,6 +3,7 @@
 	IMPORT Square
 	EXPORT Wave_SoundTick
 	EXPORT Wave_SetChannel
+	EXPORT Wave_SetInsts
 		
 	AREA    DATA, ALIGN=2
 		
@@ -47,6 +48,9 @@ NoiseChannel_Data
 NoiseChannel_Count
 	DCW 0 ; 1 counter
 	
+InstSel
+	DCB 7
+	
 MaxMag    DCD 0x00400000
 		
 	ALIGN  
@@ -58,11 +62,13 @@ MaxMag    DCD 0x00400000
 ; R0: number of used channels (used for balancing)
 ; no out (pure function)
 Wave_SoundTick
-	PUSH {R4-R10, LR}
+	PUSH {R4-R12, LR}
 
 	LDR R4, =SoundChannels ; the pointer to the current channel
 	MOV R7, #0 ; the accumulator for the sound
 	MOV R10, R0
+	LDR R11, =InstSel
+	LDRB R11, [R11]
 	
 	; Sine
 	;LDRSH R5, [R4]
@@ -87,7 +93,9 @@ Wave_SoundTick
 	
 	MOV R0, R5
 	LDRH R1, [R4, #2]
-	BL Tri
+	TST R11, #0x40
+	BLEQ Tri
+	BLNE Square
 	ADD R7, R0
 
 	LDRH R6, [R4, #2]
@@ -103,7 +111,9 @@ Skip_Tri1
 	
 	MOV R0, R5
 	LDRH R1, [R4, #6]
-	BL Tri
+	TST R11, #0x20
+	BLEQ Tri
+	BLNE Square
 	ADD R7, R0
 
 	LDRH R6, [R4, #6]
@@ -119,7 +129,9 @@ Skip_Tri2
 	
 	MOV R0, R5
 	LDRH R1, [R4, #10]
-	BL Tri
+	TST R11, #0x10
+	BLEQ Tri
+	BLNE Square
 	ADD R7, R0
 
 	LDRH R6, [R4, #10]
@@ -135,7 +147,9 @@ Skip_Tri3
 	
 	MOV R0, R5
 	LDRH R1, [R4, #14]
-	BL Tri
+	TST R11, #0x08
+	BLEQ Tri
+	BLNE Square
 	ADD R7, R0
 
 	LDRH R6, [R4, #14]
@@ -151,7 +165,9 @@ Skip_Tri4
 	
 	MOV R0, R5
 	LDRH R1, [R4, #18]
-	BL Square
+	TST R11, #0x04
+	BLEQ Tri
+	BLNE Square
 	ADD R7, R0
 
 	LDRH R6, [R4, #18]
@@ -167,7 +183,9 @@ Skip_Square1
 	
 	MOV R0, R5
 	LDRH R1, [R4, #22]
-	BL Square
+	TST R11, #0x02
+	BLEQ Tri
+	BLNE Square
 	ADD R7, R0
 
 	LDRH R6, [R4, #22]
@@ -183,7 +201,9 @@ Skip_Square2
 	
 	MOV R0, R5
 	LDRH R1, [R4, #26]
-	BL Square
+	TST R11, #0x01
+	BLEQ Tri
+	BLNE Square
 	ADD R7, R0
 
 	LDRH R6, [R4, #26]
@@ -225,7 +245,7 @@ Skip_Noise
 	BL DAC_Out
 	
 	; BX LR
-	POP {R4-R10, PC}
+	POP {R4-R12, PC}
 	
 ; R0: period (8 bits)
 ; R1: count	 (up to period)
@@ -254,5 +274,15 @@ Wave_SetChannel
 	POP {R4, R5}
 	BX LR
 	
+; in: instruments (0 = triangle, 1 = square)
+Wave_SetInsts
+	PUSH {R4, LR}
+	
+	LDR R4, =InstSel
+	STRB R0, [R4]
+	
+	POP {R4, PC}
+	
 	ALIGN
 	END	
+	

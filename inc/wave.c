@@ -68,7 +68,9 @@ static void Wave_CommonPlaySong(const song_t *song) {
 	noteCnt = 0;
 	currSong = song;
 	
+	Wave_SetInsts(song->instSel);
 	Wave_SetActiveChannels(song->numInsts);
+	
 	for(uint8_t i = 0; i < 8; i++) {
 		Wave_SetChannel(i, song->notes[0].tones[i]);
 	}
@@ -125,7 +127,7 @@ int32_t Tri(uint16_t period, uint16_t count) {
 	return (int32_t) (output);
 }
 int32_t Square(uint16_t period, uint16_t count) {
-	return count >= (period >> 1) ? MAX_MAG : -MAX_MAG;
+	return count >= (period >> 1) ? MAX_MAG / 3 : -MAX_MAG / 3;
 }
 
 #ifdef DEFAULT_SOUND
