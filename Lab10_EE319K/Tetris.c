@@ -61,9 +61,7 @@ int main(void)
 	
 	//Wave_SetChannel(Tri1, 43);
 	//Wave_SetActiveChannels(1);
-	
-	Wave_Start(); // start the sound
-		
+			
 	switchMenu();
 	Timer4A_Init(&GameLoop, 2666667, 6);
 			

@@ -63,6 +63,7 @@ void Timer2A_Handler(void){
   TIMER2_ICR_R = TIMER_ICR_TATOCINT;// acknowledge TIMER2A timeout
 	// output one value to DAC if a sound is active
 	DAC_Out(currentSong[i]);
+	i++;
 	if(i > count - 1)
 		Wave_Stop();
 	//Wave_SoundTick(ACTIVE_CHANNELS);
@@ -88,6 +89,7 @@ void Wave_Play(const uint8_t *pt, uint32_t c){
  currentSong = pt;
 	i = 0;
  count = c;
+	Wave_Start();
 }
 
 // start playing shoot
